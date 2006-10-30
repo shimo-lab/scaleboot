@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id$
+% $Id: usesb.Rnw,v 1.1 2006/10/29 23:54:34 shimo Exp shimo $
 %%\VignetteIndexEntry{Using scaleboot}
-\def\documentid{\getTime-stamp: "2006-10-30 08:54:29 shimo"}
+\def\documentid{\getTime-stamp: "2006-10-30 09:57:18 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -243,10 +243,11 @@ where $\hat\ell = \sum_{i=1}^S ( C_i\log(C_i/B_i) +
 (B_i-C_i)\log(1-C_i/B_i)) $.
 
 
-The step (iii) is performed by the the {\tt summary} method as
-already mentioned. The first line shows the raw BP
-$\alpha_1$.  The main results are the corrected $p$-values follow
-next. For each model, we calculate $q_k$, $k=1,2,3$, by
+The step (iii) is performed by the the {\tt summary} method as already
+mentioned. The first line shows the ``raw'' BP $\alpha_1$ (the BP
+obtained from the ordinary bootstrap resampling).  The main results
+are the corrected $p$-values follow next. For each model, we calculate
+$q_k$, $k=1,2,3$, by
 \[
 q_k = \sum_{j=0}^{k-1} \frac{(-1-\sigma_0^2)^j}{j!}
 \frac{\partial^j \psi(\sigma^2|\hat\beta)}{\partial (\sigma^2)^j}
@@ -280,8 +281,8 @@ plot(summary(X.sb),legend="topleft")
 (Suzuki and Shimodaira 2006) of R for bootstrapping hierarchical
 clustering.  We use {\tt pvclust} to calculate multiscale BPs for
 clusters, from which we calculate an improved version of AU p-values
-using {\tt scaleboot}.
-
+using {\tt scaleboot}. See {\tt help(lung73)} for further details of
+the following example.
 
 \subsection{Using Pvclust}
 
@@ -427,7 +428,8 @@ eventually replace {\tt CONSEL} software (Shimodaira and Hasegawa
 not have a method for file conversion of several phylogenetic
 software, and so we must use {\tt CONSEL} for this purpose before
 applying {\tt scaleboot} to calculate an improved version of AU
-p-values for trees and edges.
+p-values for trees and edges.  See {\tt help(mam15)} for further
+details of the following example.
 
 \subsection{Mammal Dataset}
 
@@ -441,11 +443,10 @@ For Unix users, download {\tt mam15-files.tgz}, and for Windows users
 download {\tt mam15-files.zip}.  The details of dataset files are as
 follows.  {\tt mam15.aa}: amino acid sequences ($n=3414$) of mtDNA for
 the six mammals.  {\tt mam15.ass}: association vectors for edges and
-trees.  {\tt mam15.cnt}: multiscale bootstrap counts.  {\tt
-mam15.lnf}: site-wise log-likelihood values (output from PAML).  {\tt
-mam15.log}: detailed information for the associations.  {\tt
-mam15.mt}: site-wise log-likelihood values (output from seqmt).  {\tt
-mam15.tpl}: 15 tree topologies.
+trees.  {\tt mam15.lnf}: site-wise log-likelihood values (output from
+PAML).  {\tt mam15.log}: detailed information for the associations.
+{\tt mam15.mt}: site-wise log-likelihood values (output from seqmt).
+{\tt mam15.tpl}: 15 tree topologies.
 
 \subsection{Likelihood Calculation of Trees}
 
@@ -572,7 +573,7 @@ mam15.relltest <- relltest(mam15.mt,nb=100000,ass=mam15.ass)
 
 \subsection{Interpreting the Results}
 
-First we sort the results in decreasing order of the likelihood values,
+First we sort the results in increasing order of log-likelihood difference,
 <<prepmam,echo=false>>=
 library(scaleboot)
 data(mam15)
