@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.1 2006/10/29 23:54:34 shimo Exp shimo $
+% $Id: usesb.Rnw,v 1.2 2006/10/30 00:59:24 shimo Exp shimo $
 %%\VignetteIndexEntry{Using scaleboot}
-\def\documentid{\getTime-stamp: "2006-10-30 09:57:18 shimo"}
+\def\documentid{\getTime-stamp: "2006-10-30 11:16:44 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -212,6 +212,22 @@ plot(X.sb,legend="topleft")
 \caption{Model Fitting}\label{fig:diag1f}
 \end{center}
 \end{figure}
+The same plot but in other variables can be shown
+(Fig.~\ref{fig:diag1f2}) by, for example,
+<<diag1f2,echo=true,fig=false>>=
+plot(X.sb,xval="sigma",log="x",yval="pvalue",legend="topleft")
+@ 
+\begin{figure}
+\begin{center}
+<<echo=false,fig=true>>=
+<<diag1f2>>
+@ 
+\caption{Model Fitting ($x=\log \sigma$, $y=\alpha_{\sigma^2}$)}
+\label{fig:diag1f2}
+\end{center}
+\end{figure}
+
+
 
 {\tt poly.k} model is specified as a polynomial of $\sigma^2$;
 $\psi(\sigma^2|\beta) = \sum_{j=0}^{k-1} \beta_j \sigma^{2j}$ for
