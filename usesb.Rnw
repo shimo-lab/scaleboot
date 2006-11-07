@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.2 2006/10/30 00:59:24 shimo Exp shimo $
-%%\VignetteIndexEntry{Using scaleboot}
-\def\documentid{\getTime-stamp: "2006-10-30 11:16:44 shimo"}
+% $Id: usesb.Rnw,v 1.3 2006/10/30 02:22:10 shimo Exp shimo $
+%%\VignetteIndexEntry{Multiscale Bootstrap using scaleboot package}
+\def\documentid{\getTime-stamp: "2006-11-07 10:34:07 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -195,12 +195,15 @@ default, four models are considered as candidates; {\tt poly.1}, {\tt
 poly.2}, {\tt poly.3}, and {\tt sing.3}. Each of these models are
 denoted as $\psi(\sigma^2|\beta)$. Let $z_{\sigma^2} = \Phi^{-1}( 1 -
 \alpha_{\sigma^2})$ be the bootstrap $z$-value at scale $\sigma^2$,
-where $\Phi^{-1}(p)$={\tt qnorm(p)}.  The coefficient vector $\beta$
-is estimated by fitting $\sigma z_{\sigma^2} = \psi(\sigma^2 |
-\beta)$.  Let $\hat\beta$ denote the estimated value; the detail of
-fitting is explained later.  We may choose the model which minimizes
-AIC value. The fitted curves are shown (Fig.~\ref{fig:diag1f}) by plotting
-$\psi(\sigma^2|\hat\beta)$ as
+where $\Phi^{-1}(p)$={\tt qnorm(p)}.  We work on $\sigma
+z_{\sigma^2}(y)$, which may be called normalized bootstrap $z$-value.
+Considering $\sigma z_{\sigma^2}$ as a function of $\sigma^2$, the
+coefficient vector $\beta$ is estimated by fitting $\sigma
+z_{\sigma^2} = \psi(\sigma^2 | \beta)$.  Let $\hat\beta$ denote the
+estimated value; the detail of fitting is explained later.  We may
+choose the model which minimizes AIC value. The fitted curves are
+shown (Fig.~\ref{fig:diag1f}) by plotting $\psi(\sigma^2|\hat\beta)$
+as
 <<diag1f,echo=true,fig=false>>=
 plot(X.sb,legend="topleft")
 @ 
@@ -232,10 +235,10 @@ plot(X.sb,xval="sigma",log="x",yval="pvalue",legend="topleft")
 {\tt poly.k} model is specified as a polynomial of $\sigma^2$;
 $\psi(\sigma^2|\beta) = \sum_{j=0}^{k-1} \beta_j \sigma^{2j}$ for
 $k\ge1$.  {\tt sing.k} model is specified as $\psi(\sigma^2|\beta) =
-\beta_0 + \sum_{j=1}^{k-2} \beta_j \sigma^{2j} (1+a)/(1+a \sigma)$ for
-$k\ge3$, where $a=\beta_{k-1}/(1-\beta_{k-1})$ so that $0\le a \le
-\infty$ for $0\le\beta_{k-1}\le1$. The number {\tt k} for each model
-denotes the number of coefficients in $\beta$.
+\beta_0 + \sum_{j=1}^{k-2} \beta_j \sigma^{2j}/(1 +
+\beta_{k-1}(\sigma-1))$ for $k\ge3$, where $0\le\beta_{k-1}\le1$. The
+number {\tt k} for each model denotes the number of coefficients in
+$\beta$.
 
 The detail of model fitting is as follows. Let $B_i$ and $C_i$ be the
 number of replicates and the observed number of times that $f(y^*)=1$,
@@ -376,7 +379,7 @@ pvrect(lung73.k3)
 <<echo=false,fig=true>>=
 <<lungplot>>
 @ 
-\caption{Dendrogram of lung73 dataset}\label{fig:lung73tree}
+\caption{Dendrogram of lung73 dataset ($k=3$)}\label{fig:lung73tree}
 \end{center}
 \end{figure}
 To calculate $p_2$ instead of $p_3$, specify {\tt k=2},
