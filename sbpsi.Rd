@@ -51,7 +51,7 @@ sbmodelnames(m=3,poly=m,sing=m,sphe=0)
   for \eqn{m\ge1}.
   \code{sbpsi.sing} defines the singular model;
   \deqn{\psi(\sigma^2 | \beta) = \beta_0 +
-    \sum_{j=1}^{m-2} \beta_j \sigma^{2j}/(1 + \beta_{m-1}(\sigma-1))}
+    \sum_{j=1}^{m-2} \frac{\beta_j \sigma^{2j}}{1 + \beta_{m-1}(\sigma-1)}}
   for \eqn{m\ge3} and \eqn{0\le\beta_{m-1}\le1}.
   \code{sbpsi.sphe} defines the spherical model; currently the number of
   parameters must be $m=3$.
