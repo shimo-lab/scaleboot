@@ -48,14 +48,14 @@ The p-values are justified only for good fitting models. By default,
 the model which minimizes the AIC value is selected. We can modify the
 AIC value by using the \code{sbaic} function. We also diagnose the
 fitting by using the \code{plot} method.
-
-} \value{
+}
+\value{
   \code{summary.scaleboot} returns
   an object of the class \code{"summary.scaleboot"}, which is inherited
   from the class \code{"scaleboot"}. It is a list containing all the components of class
   \code{"scaleboot"} and the following components:
   \item{pv}{matrix of p-values of size \code{length(models)} *
-    \code{length(k)} with elements \eqn{p_k}.
+    \code{length(k)} with elements \eqn{p_k}.}
   \item{pe}{matrix of standard errors of p-values.}
   \item{best}{ a list consisting of components \code{model} for the best
   fitting model name, \code{aic} for its AIC value, \code{pv} for a
