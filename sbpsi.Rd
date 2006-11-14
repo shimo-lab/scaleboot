@@ -54,16 +54,18 @@ sbmodelnames(m=3,poly=m,sing=m,sphe=0)
     \sum_{j=1}^{m-2} \beta_j \sigma^{2j}/(1 + \beta_{m-1}(\sigma-1))}
   for \eqn{m\ge3} and \eqn{0\le\beta_{m-1}\le1}.
   \code{sbpsi.sphe} defines the spherical model; currently the number of
-  parameters must be 3.
+  parameters must be $m=3$.
   \code{sbpsi.generic} is to calculate psi value and extrapolation from
   a given z-function.
 
   For \eqn{k>1}, the \code{sbpsi} functions return values extrapolated at
   \eqn{\sigma^2=\sigma_p^2} using derivatives up to order \eqn{k-1}
   evaluated at \eqn{\sigma^2=\sigma_0^2};
-  \deqn{\sum_{j=0}^{k-1} \frac{(\sigma_p^2-\sigma_0^2)^j}{j!}
+  \deqn{q_k = \sum_{j=0}^{k-1} \frac{(\sigma_p^2-\sigma_0^2)^j}{j!}
     \frac{d^j \psi(x|\beta)}{d x^j}\Bigr|_{\sigma_0^2},}
-  which reduces to \eqn{\psi(\sigma_0^2|\beta)} for \eqn{k=1}.
+  which reduces to \eqn{\psi(\sigma_0^2|\beta)} for \eqn{k=1}. In the
+  \code{\link{summary.scaleboot}}, the AU p-values are defined
+  by \eqn{p_k = 1-\Phi(q_k)} for \eqn{k\ge1}.
 }
 \value{
   \code{sbpsi.poly} and \code{sbpsi.sing} are examples of a sbpsi
