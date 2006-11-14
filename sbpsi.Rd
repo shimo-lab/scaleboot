@@ -32,7 +32,7 @@ sbmodelnames(m=3,poly=m,sing=m,sphe=0)
   \item{s}{\eqn{\sigma_0^2}.}
   \item{k}{numeric to specify the order of derivatives.}
   \item{sp}{\eqn{\sigma_p^2}.}
-  \item{aux}{auxiliary parameter. Currently, not used.}
+  \item{aux}{auxiliary parameter. Currently not used.}
   \item{check}{logical for boundary check.}
   \item{zfun}{z-value function with (s,beta) as parameters.}
   \item{eps}{delta for numerical computation of derivatives.}
@@ -42,23 +42,23 @@ sbmodelnames(m=3,poly=m,sing=m,sphe=0)
   \item{sphe}{maximum number of parameters in sphe models.}
 }
 \details{
-  For \eqn{k=1}, \code{sbpsi} functions return their \eqn{psi} function
-  values at \eqn{\sigma^2=\sigma_0^2}.  Currently, two types of
+  For \eqn{k=1}, the \code{sbpsi} functions return their \eqn{\psi} function
+  values at \eqn{\sigma^2=\sigma_0^2}.  Currently, four types of
   \code{sbpsi} functions are
   implemented. \code{sbpsi.poly} defines the polynomial model;
   \deqn{\psi(\sigma^2 | \beta) =
-    \sum_{j=0}^{m-1} \beta_j \sigma^{2j}.}
+    \sum_{j=0}^{m-1} \beta_j \sigma^{2j}}
+  for \eqn{m\ge1}.
   \code{sbpsi.sing} defines the singular model;
   \deqn{\psi(\sigma^2 | \beta) = \beta_0 +
-    \sum_{j=1}^{m-2} \beta_j \sigma^{2j} (1+a)/(1+a \sigma),}
-  where \eqn{a=\beta_{m-1}/(1-\beta_{m-1})} so that \eqn{0\le a \le
-    \infty} for \eqn{0\le\beta_{m-1}\le1}.
+    \sum_{j=1}^{m-2} \beta_j \sigma^{2j}/(1 + \beta_{m-1}(\sigma-1))}
+  for \eqn{m\ge3} and \eqn{0\le\beta_{m-1}\le1}.
   \code{sbpsi.sphe} defines the spherical model; currently the number of
   parameters must be 3.
   \code{sbpsi.generic} is to calculate psi value and extrapolation from
   a given z-function.
 
-  For \eqn{k>1}, \code{sbpsi} functions return values extrapolated at
+  For \eqn{k>1}, the \code{sbpsi} functions return values extrapolated at
   \eqn{\sigma^2=\sigma_p^2} using derivatives up to order \eqn{k-1}
   evaluated at \eqn{\sigma^2=\sigma_0^2};
   \deqn{\sum_{j=0}^{k-1} \frac{(\sigma_p^2-\sigma_0^2)^j}{j!}
@@ -74,9 +74,9 @@ sbmodelnames(m=3,poly=m,sing=m,sphe=0)
   the \eqn{\psi} function value or the extrapolation value.
   If check=TRUE, a sbpsi function returns NULL when all
   the elements of beta are included in the their valid
-  intervals. Otherwise, a sbpsi function returns a list with components
+  intervals. Otherwise, a \code{sbpsi} function returns a list with components
   \code{beta} for the parameter value being modified to be on a boundary
-  of the interval and \code{mask} of a logical vector indicating which
+  of the interval and \code{mask}, a logical vector indicating which
   elements are not on the boundary.
 
   \code{sbmodelnames} returns a character vector of model names.
