@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.4 2006/11/07 02:01:21 shimo Exp shimo $
+% $Id: usesb.Rnw,v 1.5 2006/11/14 08:24:05 shimo Exp shimo $
 %%\VignetteIndexEntry{Multiscale Bootstrap using Scaleboot Package}
-\def\documentid{\getTime-stamp: "2006-11-14 17:11:38 shimo"}
+\def\documentid{\getTime-stamp: "2006-11-15 00:07:40 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -14,8 +14,8 @@
 
 \title{Multiscale Bootstrap using Scaleboot Package}
 \author{Hidetoshi Shimodaira}
-\thanks{This package vignette is included in {\tt scaleboot}
- available from CRAN. The source file is usesb.Rnw (\documentid).
+\thanks{This document is a part of the {\tt scaleboot} package.
+The source file is usesb.Rnw (\documentid).
 I thank Paul A. Sheridan for his comments to improve the manuscript.}
 \address{Department of Mathematical and Computing Sciences\\
 Tokyo Institute of Technology\\
@@ -81,7 +81,7 @@ round(y,3)
 @ 
 The matrix $X=(x_{ij})$ above is of size $n\times m$ with $n=100$,
 $m=10$. We consider $X$ as a data of sample size $n$, and rows
-$x_i = (x_{11},\ldots,x_{im})$, $i=1,\ldots,n$, are observations of a
+$x_i = (x_{i1},\ldots,x_{im})$, $i=1,\ldots,n$, are observations of a
 random vector of $m$ dimensions.
 
 \subsection{Null Hypothesis}
