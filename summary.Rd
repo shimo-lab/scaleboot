@@ -36,7 +36,7 @@ compromise. The \code{\link{sbpval}} method is available to extract p-values fro
 the \code{"summary.scaleboot"} object.
 
 The p-value is defined as
-  \deqn{ \hat\alpha_{k,\sigma_0} = 1 - \Phi\left( \sum_{j=0}^{k-1}
+  \deqn{ p_k = 1 - \Phi\left( \sum_{j=0}^{k-1}
 \frac{(\sigma_p^2-\sigma_0^2)^j}{j!}  \frac{d^j \psi(x|\beta)}{d
 x^j}\Bigr|_{\sigma_0^2} \right),} where \eqn{\psi(\sigma^2|\beta)} is the
 model specification function, \eqn{\sigma_0^2} is the evaluation point
@@ -55,7 +55,7 @@ fitting by using the \code{plot} method.
   from the class \code{"scaleboot"}. It is a list containing all the components of class
   \code{"scaleboot"} and the following components:
   \item{pv}{matrix of p-values of size \code{length(models)} *
-    \code{length(k)} with elements \eqn{\hat\alpha_{k,\sigma_0}}.}
+    \code{length(k)} with elements \eqn{p_k}.
   \item{pe}{matrix of standard errors of p-values.}
   \item{best}{ a list consisting of components \code{model} for the best
   fitting model name, \code{aic} for its AIC value, \code{pv} for a

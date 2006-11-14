@@ -28,7 +28,7 @@ sbpval(x, ...)
 \value{
   The \code{sbpval} method for the class \code{"summary.scaleboot"} returns a
   matrix of p-values. Each row is a vector of
-  \eqn{\hat\alpha_{k,\sigma_0}} for \eqn{k} as specified in the \code{summary} method.
+  \eqn{p_k} for \eqn{k} as specified in the \code{summary} method.
   If \code{sd=TRUE}, then it returns a list with two components:
   \code{estimate} for the p-values and \code{sd} for its standard errors.
   If \code{best=TRUE}, then only the result for the best fit model is returned.
