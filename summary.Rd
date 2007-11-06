@@ -9,10 +9,14 @@
 }
 \usage{
 
-\method{summary}{scaleboot}(object,models=names(object$fi),k=1:3,s=1,sp=-1,...)
+\method{summary}{scaleboot}(object,models=names(object$fi),k=1:3,s=1,sp=-1,
+              type=c("Frequentist","Bayesian"),...)
 
-\method{summary}{scalebootv}(object,models=attr(object,"models"),k=1:3,...)
+\method{summary}{scalebootv}(object,models=attr(object,"models"),k=1:3,type="Frequentist",...)
 
+\method{print}{summary.scaleboot}(x,sort.by=c("aic","none"),...)
+
+\method{print}{summary.scalebootv}(x,select="average",sort.by=NULL,...)
 }
 \arguments{
   \item{object}{an object used to select a method. }
@@ -21,6 +25,15 @@
   \item{k}{numeric vector of \eqn{k} for calculating p-values.}
   \item{s}{\eqn{\sigma_0^2}}
   \item{sp}{\eqn{\sigma_p^2}}
+  \item{type}{If numeric, it is passed to \code{sbpsi} functions as
+    \code{lambda} to specify p-value type. If "Frequentist" or
+    "Bayesian", then equivalent to specifying \code{lambda} = 1 or 0,
+    respectively.}
+  \item{x}{}
+  \item{sort.by}{sort key.}
+  \item{select}{character of model name (such as "poly.3") or one of
+    "average" and "best". If "average" or "best", then the averaging by
+    Akaike weights or the best model is used, respectively.}
   \item{...}{further arguments passed to and from other methods.}  
 }
 
