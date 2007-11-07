@@ -49,7 +49,7 @@ summary.scaleboot <- function(object,models=names(object$fi),
   pvnames <- paste("k",k,sep=".")
   if(!is.numeric(type)) {
     type <- match.arg(type)
-    lambda <- switch(type, Bayes=0, Frequentist=1)
+    lambda <- switch(type, Bayesian=0, Frequentist=1)
   } else lambda <- type
 
   ## save parameters for extrapolation
