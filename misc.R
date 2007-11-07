@@ -370,7 +370,7 @@ catpval <- function(pv,pe,digits=NULL,lambda=NULL) {
     else value <- myformat(pv,pe,digits=digits+2)
   }
   if(!is.null(lambda)) {
-    if(lambda==0) lambda <- "Bayes"
+    if(lambda==0) lambda <- "Bayesian"
     else if(lambda==1) lambda <- "Frequentist"
   }
   
