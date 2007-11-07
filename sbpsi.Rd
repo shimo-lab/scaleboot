@@ -20,8 +20,7 @@ sbpsi.sphe(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE)
 
 sbpsi.generic(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,zfun,eps=0.01)
 
-sbmodelnames(m=3,one.surface=TRUE,two.surfaces=FALSE,
-             poly,sing,poa,pob,sia,sib,sphe)
+sbmodelnames(m=1:3,one.sided=TRUE,two.sided=FALSE,poly,sing,poa,pob,sia,sib,sphe)
 }
 \arguments{
   \item{beta}{numeric vector of parameters;
@@ -37,9 +36,9 @@ sbmodelnames(m=3,one.surface=TRUE,two.surfaces=FALSE,
   \item{check}{logical for boundary check.}
   \item{zfun}{z-value function with (s,beta) as parameters.}
   \item{eps}{delta for numerical computation of derivatives.}
-  \item{m}{numeric to specify the maximum number of parameters.}
-  \item{one.surface}{logical to include poly and sing models.}
-  \item{two.surfaces}{logical to include poa, pob, sia, and sib models.}
+  \item{m}{numeric vector to specify the numbers of parameters.}
+  \item{one.sided}{logical to include poly and sing models.}
+  \item{two.sided}{logical to include poa, pob, sia, and sib models.}
   \item{poly}{maximum number of parameters in poly models.}
   \item{sing}{maximum number of parameters in sing models.}
   \item{sphe}{maximum number of parameters in sphe models.}

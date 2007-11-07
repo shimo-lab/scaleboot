@@ -57,7 +57,7 @@ sbfit.default <- function(x,nb,sa,models=NULL,nofit=FALSE,...) {
   bp <- x
   op <- sboptions()
   if(is.null(models)) models <- op$models
-  if(length(models)==1 && is.numeric(models)) models <- sbmodelnames(m=models)
+  if(is.numeric(models)) models <- sbmodelnames(m=models)
   bp <- as.vector(bp)
   if(length(bp) != length(sa)) stop("length(bp) != length(sa)")
   nb <- rep(nb,length=length(bp))

@@ -22,34 +22,39 @@
 ###
 
 ## model names
-sbmodelnames <- function(m=3,one.surface=TRUE,two.surfaces=FALSE,
+sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,
                          poly,sing,poa,pob,sia,sib,sphe){
-  if(missing(poly)) poly <- if(one.surface) m else 0
-  if(missing(sing)) sing <- if(one.surface) m else 0
-  if(missing(poa)) poa <- if(two.surfaces) m else 0
-  if(missing(pob)) pob <- if(two.surfaces) m else 0
-  if(missing(sia)) sia <- if(two.surfaces) m else 0
-  if(missing(sib)) sib <- if(two.surfaces) m else 0
+  if(missing(poly)) poly <- if(one.sided) m else 0
+  if(missing(sing)) sing <- if(one.sided) m else 0
+  if(missing(poa)) poa <- if(two.sided) m else 0
+  if(missing(pob)) pob <- if(two.sided) m else 0
+  if(missing(sia)) sia <- if(two.sided) m else 0
+  if(missing(sib)) sib <- if(two.sided) m else 0
   if(missing(sphe)) sphe <- 0
 
-  ## one surface models
-  polyk <- if(poly>=1) paste("poly",1:poly,sep=".") else NULL
-  singk <- if(sing>=3) paste("sing",3:sing,sep=".") else NULL
+  make1 <- function(na,mm,min=1,max=Inf) {
+    k <- mm[mm>=min & mm<=max]
+    if(length(k)>0) paste(na,k,sep=".") else NULL
+  }
+  
+  ## one sided models
+  polyk <- make1("poly",poly,1)
+  singk <- make1("sing",sing,3)
 
-  ## two surfaces models (polynomial-difference)
-  poa1k <- if(poa>=2) paste("poa1",2:poa,sep=".") else NULL
-  poa2k <- if(poa>=4) paste("poa2",4:poa,sep=".") else NULL
-  pob1k <- if(pob>=2) paste("pob1",2:pob,sep=".") else NULL
-  pob2k <- if(pob>=4) paste("pob2",4:pob,sep=".") else NULL
+  ## two sided models (polynomial-difference)
+  poa1k <- make1("poa1",poa,2)
+  poa2k <- make1("poa2",poa,4)
+  pob1k <- make1("pob1",pob,2)
+  pob2k <- make1("pob2",pob,4)
 
-  ## two surfaces models (singular-difference)
-  sia1k <- if(sia>=4) paste("sia1",4:sia,sep=".") else NULL
-  sia2k <- if(sia>=5) paste("sia2",5:sia,sep=".") else NULL
-  sib1k <- if(sib>=4) paste("sib1",4:sib,sep=".") else NULL
-  sib2k <- if(sib>=5) paste("sib2",5:sib,sep=".") else NULL
+  ## two sided models (singular-difference)
+  sia1k <- make1("sia1",sia,4)
+  sia2k <- make1("sia2",sia,5)
+  sib1k <- make1("sib1",sib,4)
+  sib2k <- make1("sib2",sib,5)
 
   ## specialized models
-  sphek <- if(sphe==3) paste("sphe",sphe,sep=".") else NULL
+  sphek <- make1("sphe",sphe,3,3)
 
   ## output model names
   c(polyk,singk,poa1k,poa2k,pob1k,pob2k,sia1k,sia2k,sib1k,sib2k,sphek)
