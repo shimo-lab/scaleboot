@@ -34,7 +34,7 @@
 ##
 
 summary.scaleboot <- function(object,models=names(object$fi),
-                              k=1:3,s=1,sp=-1,
+                              k=3,s=1,sp=-1,
                               type=c("Frequentist","Bayesian"),...) {
 ## note: ... is not passed to any further, but only to avoid error
 ##                 "S3 generic/method consistency ... WARNING"
@@ -70,25 +70,31 @@ summary.scaleboot <- function(object,models=names(object$fi),
     pv <- rep(object$raw$pv,length(pvnames))
     pe <- rep(object$raw$pe,length(pvnames))
     names(pv) <- names(pe) <- pvnames
-    object$best <- list(model="raw",aic=0,pv=pv,pe=pe)
-    object$average <- list(model="raw",w=structure(1,names="raw"),pv=pv,pe=pe)
+    object$best <- list(model="raw",aic=0,pv=pv,pe=pe,dv=0,de=0)
+    object$average <- list(model="raw",w=structure(1,names="raw"),pv=pv,pe=pe,dv=0,de=0)
     return(object)
   }
 
-  ## corrected p-values
+  ## corrected p-values and beta0
   pv <- pe <- matrix(NA,length(models),length(k),
                      dimnames=list(models,pvnames))
+  dv <- de <- structure(rep(0,length(models)),names=models) # beta0 (value and sd)
   for(i in seq(along=models)) {
     m <- models[[i]]
-    psi <- get(object$fi[[m]]$psi)
+    f <- object$fi[[m]]
+    psi <- get(f$psi)
     for(j in seq(along=k)) {
-      y <- sbpv1(object$fi[[m]],psi,k=k[[j]],s=s,sp=sp,lambda=lambda)
+      y <- sbpv1(f,psi,k=k[[j]],s=s,sp=sp,lambda=lambda)
       pv[i,j] <- y$pv
       pe[i,j] <- y$pe
     }
+    dv[i] <- f$par[1]*f$mag[1]
+    de[i] <- sqrt(f$var[1,1])*f$mag[1]
   }
-  object$pv <- pv
-  object$pe <- pe
+  object$pv <- pv # p-value
+  object$pe <- pe # (sd)
+  object$dv <- dv # beta0
+  object$de <- de # (sd)
 
   ## chisq p-value
   if(!is.null(f <- object$fi$sphe.3)) {
@@ -103,23 +109,27 @@ summary.scaleboot <- function(object,models=names(object$fi),
   model <- models[[i]]
   pvbest <- pv[i,]; pebest <- pe[i,]
   names(pvbest) <- names(pebest) <- pvnames
-  object$best <- list(model=model,aic=aic0,pv=pvbest,pe=pebest)
+  object$best <- list(model=model,aic=aic0,pv=pvbest,pe=pebest,dv=dv[[i]],de=de[[i]])
 
   ## average by akaike weights
-  w <- exp(-aic/2) # akaike weights
+  w <- exp(-(aic-aic0)/2) # akaike weights
   w <- w/sum(w)
   u <- w>op$th.aicw # ignore small values
   w <- w[u]/sum(w[u])
   pvave <- apply(w*pv[u,,drop=F],2,sum)
   peave <- apply(w*pe[u,,drop=F],2,sum)
-  object$average <- list(w=w,pv=pvave,pe=peave)
+  dvave <- sum(w*dv[u])
+  deave <- sum(w*de[u])
+  object$average <- list(w=w,pv=pvave,pe=peave,dv=dvave,de=deave)
 
   object
 }
 
 ## print
-print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
-
+print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...) {
+  ## verbose
+  if(verbose) print.scaleboot(x,sort.by=sort.by,...)
+  
   ### raw
   a <- catpval(x$raw$pv,x$raw$pe)
   if(is.null(x$raw$s)) x$raw$s <- NA
@@ -148,6 +158,11 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
   pes <- rbind(x$best$pe,x$average$pe,x$pe)
   rownames(pvs)[1:2] <- rownames(pes)[1:2] <- c("best","average")
 
+  ## beta0
+  dvs <- c(x$best$dv,x$average$dv,x$dv)
+  des <- c(x$best$de,x$average$de,x$de)
+  names(dvs)[1:2] <- names(des)[1:2] <- c("best","average")
+
   ## prepare table
   pval <- matrix("",nrow(pvs),ncol(pvs))
   dimnames(pval) <- dimnames(pvs)
@@ -160,6 +175,11 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
   pvalbest <- pval[1:2,,drop=F] # for best and average
   pval <- pval[-(1:2),,drop=F] # for models
 
+  ## beta0 table
+  beta0 <- myformat(c(pi,dvs),c(pi,des),digits=2)[-1]
+  beta0best <- beta0[1:2]
+  beta0 <- beta0[-(1:2)]
+
   ## aic and akaike weights
   aicval <- sbaic(x)
   aic <- myformat(c(pi,aicval),digits=2)[-1]
@@ -168,7 +188,7 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
   weight[names(a)] <- a
 
   ## sort
-  tab <- cbind(pval,aic,weight) # to be catmat
+  tab <- cbind(pval,beta0,aic,weight) # to be catmat
   sort.by <- match.arg(sort.by)
   j <- switch(sort.by,
               none=1:length(aicval),
@@ -183,7 +203,8 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
 
   ## the bottom line
   cat("\nCorrected P-values by the Best Model and by Akaike Weights Averaging:\n")
-  catmat(pvalbest)
+  beta0 <- beta0best
+  catmat(cbind(pvalbest,beta0))
   cat("\n")
 
   invisible(x)
@@ -194,7 +215,7 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),...) {
 ## scalebootv
 ##
 
-summary.scalebootv <- function(object,models=attr(object,"models"),k=1:3,
+summary.scalebootv <- function(object,models=attr(object,"models"),k=3,
                                type="Frequentist",...) {
   for(i in seq(along=object)) object[[i]] <- summary(object[[i]],models,k=k,type=type,...)
   class(object) <- c("summary.scalebootv",class(object))
@@ -217,7 +238,8 @@ selectpv <- function(x,select) {
   } else if(select=="average") {
     pvpe <- lapply(x,function(s)
        list(model=s$best$model,weight=s$average$w[s$best$model],
-            pv=s$average$pv,pe=s$average$pe))
+            pv=s$average$pv,pe=s$average$pe,
+            dv=s$average$dv,de=s$average$de))
     model <- format(sapply(pvpe,"[[","model"))
     weight <- catpval(sapply(pvpe,"[[","weight"))$value
     outaic <- cbind(model,weight)
@@ -225,7 +247,8 @@ selectpv <- function(x,select) {
   } else {
     pvpe <- lapply(x, function(s)
       if(!is.null(s$fi)) list(model=select,aic=s$fi[[select]]$aic,
-                              pv=s$pv[select,],pe=s$pe[select,])
+                              pv=s$pv[select,],pe=s$pe[select,],
+                              dv=s$dv[select],de=s$de[select])
       else s$best)
     model <- format(sapply(pvpe,"[[","model"))
     aic <- format(round(sapply(pvpe,"[[","aic"),digits=2))
@@ -237,17 +260,19 @@ selectpv <- function(x,select) {
 }
 
 
-print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
+print.summary.scalebootv <- function(x,select="average",sort.by=NULL,nochisq=TRUE,...) {
   ## extract information
   pvalues <- attr(x,"pvalues")
   lambda <- attr(x,"lambda")
   raws <- lapply(x,"[[","raw")
-  chisqs <- lapply(x,"[[","chisq")
-  nochisq <- all(sapply(chisqs,is.null))
+  if(!nochisq) {
+    chisqs <- lapply(x,"[[","chisq")
+    nochisq <- all(sapply(chisqs,is.null))
+  }
 
   ## prepare table containers for p-values
-  out <- matrix("",length(x),1+length(pvalues)+!nochisq,
-              dimnames=list(names(x),c("raw",pvalues,if(nochisq) NULL else "chisq")))
+  out <- matrix("",length(x),2+length(pvalues)+!nochisq,
+              dimnames=list(names(x),c("raw",pvalues,if(nochisq) NULL else "chisq","beta0")))
 
   outval <- matrix(0,length(x),1+length(pvalues)+!nochisq,
                    dimnames=list(names(x),c("raw",pvalues,if(nochisq) NULL else "chisq"))
@@ -276,6 +301,10 @@ print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
     out[,p] <- a$value
     outval[,p] <- pv
   }
+  dv <- sapply(selpv$pvpe,"[[","dv")
+  de <- sapply(selpv$pvpe,"[[","de")
+  de[de>10] <- NA
+  out[,"beta0"] <- myformat(c(pi,dv),c(pi,de),digits=2)[-1]
 
   ## sort and print
   cat("\nCorrected P-values by ",selpv$name," (",a$name,",",a$lambda,"):\n",sep="")
@@ -315,5 +344,5 @@ sbpval.summary.scaleboot <- function(x,sd=FALSE,
 
 ## scalebootv
 sbpval.summary.scalebootv <- function(x,...) {
-  lapply(x,sbpval,...)
+  sapply(x,sbpval,...)
 }
