@@ -85,9 +85,8 @@ sbfit.default <- function(x,nb,sa,models=NULL,nofit=FALSE,...) {
       print(psi)
     }
     ans <- sbfit1(bp,nb,sa,get(psi),
-                  ini$inits,ini$mag,
-                  method=op$method,
-                  control=op$control)
+                  ini$inits,ini$mag,ini$omg,ini$trg,
+                  method=op$method,control=op$control)
     if(!is.null(ans)) {
       ans$psi <- psi
       
@@ -119,7 +118,7 @@ sbfit.matrix <- function(x,nb,sa,models=NULL,names.hp=rownames(x),
                          nofit=FALSE,cluster=NULL,...) {
   ## preliminary
   if(is.null(models)) models <- sboptions("models")
-  if(length(models)==1 && is.numeric(models)) models <- sbmodelnames(m=models)
+  if(is.numeric(models)) models <- sbmodelnames(m=models)
   x <- as.matrix(x)
   nb <- rep(nb,length=ncol(x))
   if(ncol(x) != length(sa)) stop("length(bp) != length(sa")
@@ -247,7 +246,7 @@ printbps <- function(bps,nb,sa,digits=NULL) {
 
 
 ## print
-print.scaleboot <- function(x,sort.by=c("none","aic"),...) {
+print.scaleboot <- function(x,sort.by=c("aic","none"),...) {
   printbps(x$bp,x$nb,x$sa)
   
   fi <- x$fi
@@ -284,9 +283,9 @@ print.scaleboot <- function(x,sort.by=c("none","aic"),...) {
 
   ## print tables
   cat("\nCoefficients:\n")
-  catmat(betamat[j,])
+  catmat(betamat[j,,drop=F])
   cat("\nModel Fitting:\n")
-  catmat(gmat[j,])
+  catmat(gmat[j,,drop=F])
 
   ## find the best model
   aic0 <- min(aic)
