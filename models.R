@@ -346,26 +346,40 @@ parsphere <- function(beta) {
 
 ## psi function
 sbpsi.sphe <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE) {
+  p <- parsphere(beta) # p=c(v,a,nu)
+  v <- p[1]; a <- p[2]; nu <- p[3]
   if(check) {
-    x <- beta[3]
-    if(x <= 0.01) x <- 0
-    else return(NULL)
-    ## if there is a change...
-    beta[3] <- x
-    return(list(beta=beta,mask=c(T,T,F)))
+    a1 <- a3 <- TRUE
+    ## check beta0
+    if((v+a)*a < 0) {
+      v <- -2*a - v # it does not change the probability
+      a1 <- FALSE
+    }
+    ## check degrees of freedom
+    if(nu <= 1.01) {nu <- 1.0; a3 <- FALSE}
+    ## save
+    if(a1&&a3) return(NULL)
+    else {
+      beta[1] <- v; beta[3] <- log(nu)
+      y <- c(TRUE,TRUE,a3)
+      return(list(beta=beta,mask=y))
+    }
   }
-  p <- parsphere(beta)
-  if(k==0) { ## speical case: chisq p-value
+
+  ## speical case: chisq p-value
+  if(k==0) {
     zval <- zsphere(p[1],p[2],p[3],1,1,au=TRUE)
     return(zval)
   }
+
+  ## probability calculation
   s0 <- s
   mypsi <- function(s) sqrt(s)*zsphere(p[1],p[2],p[3],s,s0)
   y <- mypsi(s)
 
   k <- round(k)
   w <- 1
-  if(k >= 2) {
+  if(is.finite(y) && k >= 2) {
     for(j in 1:(k-1)) {
       w <- w * (sp-s) / j
       d <- nderiv(mypsi,s,j)
@@ -389,17 +403,17 @@ zsphere <- function(v,a,nu,s,s0=s,au=FALSE) {
   if(a<0) { v <- -v; a <- -a; b <- -b; lowtail <- FALSE }
   else lowtail <- TRUE
   c <- (nu-1)/(a+b)
-  if(b^2/s0 < 1e5) {
-    p <- pchisq(a^2/s,nu,b^2/s,lower.tail=lowtail)
-    if(p>1.0) p <- 1.0
-    z <- -qnorm(p)    
-#    if(p<0.99) z <- -qnorm(p)
-#    else z <- qnorm(pchisq(a^2/s,nu,b^2/s,lower.tail=!lowtail))
-  } else {
+  sq0 <- sqrt(s0)
+  z0 <- v/sq0 + c*sq0
+  if(b^2/s0 < 1e5 && abs(z0)<5) {
+    lowtail2 <- z0>0
+    lowtail1 <- xor(lowtail,!lowtail2)
+    z <- -qnorm(pchisq(a^2/s,nu,b^2/s,lower.tail=lowtail1),lower.tail=lowtail2)
+  } else { ## normal approx (for improving accuracy, instead for speed)
     sigma <- sqrt(s)
     z <- v/sigma + c*sigma
   }
-  
+#  if(is.infinite(z)) browser()
   return(z[[1]])
 }
 
@@ -457,6 +471,8 @@ sbpsi.generic <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,zf
 ##    d1 = (x[2]-x[1])/(s2-s1)
 ##    d0 = x[1]-d1*s1
 ##   ( x[1] = d0+d1*s1; x[2] = d0+d1*s2 )
+##  * Constraint: x[1]>0, x[2]>0
+##  * We set s1=0, s2=10
 ##
 
 sbpsipoa <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,k1,typea) {
@@ -464,38 +480,57 @@ sbpsipoa <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,k1,type
   if(k0<k1) stop("too few parameters") # can be replaced by k0<1
   b <- beta[1:k0]
   x <- beta[(k0+1):(k0+k1)]
-  if(check) {
-    a1 <- b<=-9.99; b[a1] <- -10
-    a2 <- b>= 9.99; b[a2] <- 10
-    a3 <- x<=0.01; x[a3] <- 0
-    a4 <- x>=9.99; x[a4] <- 10
-    beta[1:k0] <- b
-    beta[(k0+1):(k0+k1)] <- x
-    y <- c(!(a1|a2),!(a3|a4)) # valid parameter range
-    if(all(y)) return(NULL) else return(list(beta=beta,mask=y))
-  }
+  s2 <- 10
   if(k1==1) {
     d0 <- x[1]; d1 <- 0
   } else if(k1==2) {
-    s1 <- -1 # minimum s
-    s2 <- 9  # maximam s
-    d1 = (x[2]-x[1])/(s2-s1)
-    d0 = x[1]-d1*s1
+    d0 <- x[1]; d1 <- (x[2]-x[1])/s2
   } else stop("k1 out of range")
 
+  if(check) {
+    op <- sboptions()
+    ## check beta0
+    if(!typea) b <- -b
+    v1 <- b[1]
+    if(k0>=2) v1 <- v1 + b[2]
+    v2 <- v1 + d0+d1
+    if(abs(v1)>abs(v2)) {
+      b[1] <- b[1]+d0
+      if(k0>=2) b[2] <- b[2]+d1
+      b <- -b
+      a0 <- TRUE
+    } else a0 <- FALSE
+
+    ## check the limits
+    lo.lim <-  op$lim.poa[1]
+    up.lim <-  op$lim.poa[2]
+    a1 <- b<=-9.99; b[a1] <- -10
+    a2 <- b>= 9.99; b[a2] <- 10
+    a3 <- x<=lo.lim+0.01; x[a3] <- lo.lim
+    a4 <- x>=up.lim-0.01; x[a4] <- up.lim
+    
+    ## save
+    if(!typea) b <- -b    
+    beta[1:k0] <- b
+    beta[(k0+1):(k0+k1)] <- x
+    y <- c(!(a1|a2),!(a3|a4)) # valid parameter range
+    if(all(y)&&!a0) return(NULL) else return(list(beta=beta,mask=y))
+  }
   if(typea) beta1 <- b else beta1 <- -b
   psi1 <- sbpsi.poly(beta1,s,k,sp)
   psi2 <- psi1 + sbpsi.poly(c(d0,d1),s,k,sp)
 
   if(is.null(lambda)) {
     sigma <- sqrt(s)
-    psi <- -sigma*qnorm2(pnorm(-psi1/sigma) - pnorm(-psi2/sigma))
+#    psi <- -sigma*qnorm2(pnorm(-psi1/sigma) - pnorm(-psi2/sigma))
+    psi <- sigma*wzval(psi1/sigma,psi2/sigma,-1)
   } else {
-    p1 <- pnorm(-psi1) # p for psi1
-    p2 <- pnorm(-psi2) # p for psi2
-    pb <- p1-p2; if(pb<0) pb <- 0 # bayes
-    pf <- p1+p2; if(pf>1) pf <- 2-pf # freq
-    psi <- -qnorm2(lambda*pf + (1-lambda)*pb) # mixing the two
+#    p1 <- pnorm(-psi1) # p for psi1
+#    p2 <- pnorm(-psi2) # p for psi2
+#    p <- p1 + (2*lambda-1)*p2
+#    if(p<0) p <- 0 else if(p>1) p <- 2-p
+#    psi <- -qnorm2(p)
+    psi <- wzval(psi1,psi2,2*lambda-1)
   }
   if(typea) psi else -psi
 }
@@ -559,27 +594,43 @@ sbpsisia <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,k1,type
   b <- beta[1:k0]
   u <- beta[k0+1] # written as x in sbpsi.sing
   x <- beta[(k0+2):(k0+1+k1)]
+  s2 <- 10
+  if(k1==1) {
+    d0 <- x[1]; d1 <- 0
+  } else if(k1==2) {
+    d0 <- x[1]; d1 <- (x[2]-x[1])/s2
+  } else stop("k1 out of range")
+
   if(check) {
+    op <- sboptions()
+    ## check beta0
+    if(!typea) b <- -b
+    v1 <- b[1] + b[2]
+    v2 <- v1 + d0+d1
+    if(abs(v1)>abs(v2)) {
+      b[1:2] <- b[1:2] + c(d0,d1)
+      b <- -b
+      a0 <- TRUE
+    } else a0 <- FALSE
+
+    ## check the limits
+    lo.lim <-  op$lim.sia[1]
+    up.lim <-  op$lim.sia[2]
     a1 <- b<=-9.99; b[a1] <- -10
     a2 <- b>= 9.99; b[a2] <- 10
-    a3 <- x<=0.01; x[a3] <- 0
-    a4 <- x>=9.99; x[a4] <- 10
+    a3 <- x<=lo.lim+0.01; x[a3] <- lo.lim
+    a4 <- x>=up.lim-0.01; x[a4] <- up.lim
     a5 <- u <= 0.01; u[a5] <- 0
     a6 <- u >= 0.99; u[a6] <- 1
+
+    ## save
+    if(!typea) b <- -b
     beta[1:k0] <- b
     beta[k0+1] <- u
     beta[(k0+2):(k0+1+k1)] <- x
     y <- c(!(a1|a2),!(a5|a6),!(a3|a4)) # valid parameter range
-    if(all(y)) return(NULL) else return(list(beta=beta,mask=y))
+    if(all(y)&&!a0) return(NULL) else return(list(beta=beta,mask=y))
   }
-  if(k1==1) {
-    d0 <- x[1]; d1 <- 0
-  } else if(k1==2) {
-    s1 <- -1 # minimum s
-    s2 <- 9  # maximam s
-    d1 = (x[2]-x[1])/(s2-s1)
-    d0 = x[1]-d1*s1
-  } else stop("k1 out of range")
 
   if(typea) beta1 <- b else beta1 <- -b
   beta2 <- beta1; beta2[1:2] <- beta2[1:2]+ c(d0,d1)
@@ -588,13 +639,18 @@ sbpsisia <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,k1,type
 
   if(is.null(lambda)) {
     sigma <- sqrt(s)
-    psi <- -sigma*qnorm2(pnorm(-psi1/sigma) - pnorm(-psi2/sigma))
+#    psi <- -sigma*qnorm2(pnorm(-psi1/sigma) - pnorm(-psi2/sigma))
+    psi <- sigma*wzval(psi1/sigma,psi2/sigma,-1)
   } else {
-    p1 <- pnorm(-psi1) # p for psi1
-    p2 <- pnorm(-psi2) # p for psi2
-    pb <- p1-p2; if(pb<0) pb <- 0 # bayes
-    pf <- p1+p2; if(pf>1) pf <- 2-pf # freq
-    psi <- -qnorm2(lambda*pf + (1-lambda)*pb) # mixing the two
+#    p1 <- pnorm(-psi1) # p for psi1
+#    p2 <- pnorm(-psi2) # p for psi2
+#    pb <- p1-p2; if(pb<0) pb <- 0 # bayes
+#    pf <- p1+p2; if(pf>1) pf <- 2-pf # freq
+#    psi <- -qnorm2(lambda*pf + (1-lambda)*pb) # mixing the two
+#    p <- p1 + (2*lambda-1)*p2
+#    if(p<0) p <- 0 else if(p>1) p <- 2-p
+#    psi <- -qnorm2(p)
+    psi <- wzval(psi1,psi2,2*lambda-1)
   }
   if(typea) psi else -psi
 }
@@ -741,15 +797,19 @@ sbini.sphe <- function(size,x,y,aux=NULL) {
 ## x : sbfit parameters
 ## y : sbfit fits
 sbinipoa <- function(size,x,y,aux=NULL,k1,typea) {
+  op <- sboptions()
   ## set mag
   k0 <- size-k1
   if(k0<1) stop("k should be larger")
   if(k1>2 || k1<0) stop("k1 out of range")
-  mag0 <- sboptions("mag.poly")
+  mag0 <- op$mag.poly
   size0 <- length(mag0)
   if(k0<=size0) mag <- mag0[1:k0]
   else mag <- c(mag0,rep(mag0[size0],k0-size0))
-  mag <- c(mag,sboptions("mag1.poa")[1:k1])
+  mag <- c(mag,op$mag1.poa[1:k1])
+  ## set regularization term
+  trg <- c(rep(0,k0),rep(op$lim.poa[2],k1))
+  omg <- c(rep(0,k0),rep(op$omg.poa,k1))
 
   ## default value
   x0 <- 1.0 # default difference
@@ -788,7 +848,7 @@ sbinipoa <- function(size,x,y,aux=NULL,k1,typea) {
       })
     inits <- cbind(inits,par1/mag)
   }
-  list(inits=inits,mag=mag)
+  list(inits=inits,mag=mag,omg=omg,trg=trg)
 }
 
 sbini.poa1 <- function(size,x,y,aux=NULL) sbinipoa(size,x,y,aux,k1=1,typea=TRUE)
@@ -811,7 +871,10 @@ sbinisia <- function(size,x,y,aux=NULL,k1,typea) {
   if(k0<=size0) mag <- mag0[1:k0]
   else mag <- c(mag0,rep(mag0[size0],k0-size0))
   mag <- c(mag,sboptions("mag1.sing"),sboptions("mag1.sia")[1:k1])
-
+  ## set regularization term
+  trg <- c(rep(0,k0),rep(op$lim.poa[2],k1))
+  omg <- c(rep(0,k0),rep(op$omg.poa,k1))
+  
   ## default value
   x0 <- 1.0 # default difference
   par <- rep(0,size)
@@ -849,7 +912,7 @@ sbinisia <- function(size,x,y,aux=NULL,k1,typea) {
       })
     inits <- cbind(inits,par1/mag)
   }
-  list(inits=inits,mag=mag)
+  list(inits=inits,mag=mag,omg=omg,trg=trg)
 }
 
 sbini.sia1 <- function(size,x,y,aux=NULL) sbinisia(size,x,y,aux,k1=1,typea=TRUE)
