@@ -27,7 +27,7 @@ sbfit(x, ...)
 
 \method{sbfit}{scalebootv}(x,models=attr(x,"models"),...)
 
-\method{print}{scaleboot}(x,sort.by=c("none","aic"),...)
+\method{print}{scaleboot}(x,sort.by=c("aic","none"),...)
 
 \method{print}{scalebootv}(x,...)
 }
@@ -173,7 +173,7 @@ plot(f,legend="topleft") # observed bp's and fitted curves
 ## approximately unbiased p-values
 summary(f) # calculate and print p-values
 ## refitting with models up to "poly.4" and "sing.4"
-f <- sbfit(f,models=4)
+f <- sbfit(f,models=1:4)
 f # print the result of fitting
 plot(f,legend="topleft") # observed bp's and fitted curves
 summary(f) # calculate and print p-values
@@ -181,14 +181,14 @@ summary(f) # calculate and print p-values
 ## Testing multiple hypotheses (only two here)
 ## Examples of fitting models to vectors of bp's
 ## mam15.relltest[c("t1,t2")]
-cnt1 <- c(99982,99247,95068,86876,77802,68562,57842,45529,
-    34499,26731,21158,16663,12982) # cnt for "t1"
-cnt2 <- c(0,0,0,0,56,926,3614,7162,10068,11623,
-     12432,13361,13518) # cnt for "t2"
+cnt1 <- c(85831,81087,76823,72706,67946,62685,57576,51682,
+       45887,41028,35538,31232,27832)  # cnt for "t1"
+cnt2 <- c(2,13,100,376,975,2145,3682,5337,7219,8559,
+       10069,10910,11455)  # cnt for "t2"
 cnts <- rbind(cnt1,cnt2)
 nb <- 100000 # number of replicates at each scale
 bps <- cnts/nb # row vectors are bp's
-sa <- 10^seq(-2,2,length=13) # scales (sigma squared)
+sa <- 9^seq(-1,1,length=13) # scales (sigma squared)
 fv <- sbfit(bps,nb,sa) # returns a "scalebootv" object
 fv # print the result of fitting
 plot(fv) # multiple plots
