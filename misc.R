@@ -32,19 +32,27 @@
 ## psi : function(beta,s)
 ## inits : matrix of initial beta's
 ## mag : vector of magnification factor for beta
+## omg: weights for penality of regularization term
+## trg: target values of parameters of regularlization term
 
-sbfit1 <- function(bp,nb,sa,psi,inits,mag=1,
+sbfit1 <- function(bp,nb,sa,psi,inits,mag=1,omg=NULL,trg=NULL,
                    method=NULL,control=NULL) {
   ss <- sqrt(sa)
-  lik <- function(par)
+  lik <- function(par) # (-1)* log likelihood function
     likbinom(pnorm(-sapply(sa,function(s) psi(mag*par,s))/ss),bp,nb)
+  if(!is.null(omg)) {
+    if(is.null(trg)) trg <- 0
+    obj <- function(par) lik(par)+sum(omg*(mag*par-trg)^2)
+  } else obj <- lik
   chkcoef <- function(par) {
     y <- psi(mag*par,check=TRUE)
     if(!is.null(y)) y$par <- y$beta/mag
     y
   }
-  fit <- optims(inits,lik,method=method,control=control,chkcoef=chkcoef)
+  fit <- optims(inits,obj,method=method,control=control,chkcoef=chkcoef)
   fit$mag <- mag
+  fit$omg <- omg
+  fit$trg <- trg
   fit
 }
 
@@ -225,7 +233,7 @@ optims <- function(coefs,fn,chkcoef=NULL,eps=1e-3,...) {
     if(is.null(chkcoef)) {
       fit <- optim2(coef0) # unconstrained optimizaiton
     } else {
-      for(j in 1:len) { # should not be repeated more than len
+      for(j in 1:(len+1)) { # should not be repeated more than len+1
         par <- coef0[pos]
         fit <- optim2(par)
         if(length(pos)>0) coef0[pos] <- fit$par
@@ -238,8 +246,10 @@ optims <- function(coefs,fn,chkcoef=NULL,eps=1e-3,...) {
           print(y)
           print(fit)
         }
-        if(is.null(y) || all(y$mask == mask)) break
-        coef0 <- y$par; mask <- y$mask; pos <- which(y$mask)
+        if(is.null(y)) break
+        coef0 <- y$par
+        if(all(y$mask == mask)) break
+        mask <- y$mask; pos <- which(y$mask)        
       }
       fit$par <- coef0
     }
@@ -302,6 +312,34 @@ qnorm2 <- function(x) {
   x[x>1] <- 1
   x[x<0] <- 0
   qnorm(x)
+}
+
+## weighted average of z-values
+wsumzval <- function(z,w) {
+  i0 <- order(-w)[1] # argmax(w)
+  wsum <- function(x) {
+    lowtail <- x[i0] < 0
+    qnorm(sum(w*pnorm(x,lower.tail=lowtail)),lower.tail=lowtail)
+  }
+  if(is.array(z)) apply(z,1:(length(dim(z))-1),wsum)
+  else wsum(z)
+}
+
+## wzval for difference models (poa and sia)
+## out=-qnorm(pnorm(-z1) + w*pnorm(-z2))
+## =qnorm2(pnorm(z1) - w*pnorm(-z2) ) 
+wzval <- function(z1,z2,w) {
+  if(z1>0) {
+    p <- pnorm(-z1) + w*pnorm(-z2)
+    if(p>1) p <- 2-p
+    else if(p<0) p <- 0
+    -qnorm(p)
+  } else {
+    p <- pnorm(z1) - w*pnorm(-z2)
+    if(p<0) p <- -p
+    else if(p>1) p <- 1
+    qnorm(p)
+  }
 }
 
 ## nderiv: numerical derivative
