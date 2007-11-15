@@ -22,15 +22,15 @@
 ###
 
 ## model names
-sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,
+sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,rev.sided=FALSE,
                          poly,sing,poa,pob,sia,sib,sphe){
   if(missing(poly)) poly <- if(one.sided) m else 0
   if(missing(sing)) sing <- if(one.sided) m else 0
   if(missing(poa)) poa <- if(two.sided) m else 0
-  if(missing(pob)) pob <- if(two.sided) m else 0
   if(missing(sia)) sia <- if(two.sided) m else 0
-  if(missing(sib)) sib <- if(two.sided) m else 0
-  if(missing(sphe)) sphe <- 0
+  if(missing(pob)) pob <- if(rev.sided) m else 0
+  if(missing(sib)) sib <- if(rev.sided) m else 0
+  if(missing(sphe)) sphe <- if(one.sided) m else 0
 
   make1 <- function(na,mm,min=1,max=Inf) {
     k <- mm[mm>=min & mm<=max]
@@ -64,32 +64,42 @@ sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,
 
 .onLoad <- function(libname, pkgname) {
   op <- list(
-       ## sbfit
-       models = sbmodelnames(), # default models for fitting
-       control = list(reltol=1e-14),  # for optim
-       method = NULL,  # for optim
-       mag.poly = c(1,0.1,0.01,0.001),  # mag factor for par in poly model
-       mag.sing = c(1,0.1,0.01,0.001),  # mag factor for par in sing model
-       mag1.sing = 0.1,  # mag factor for singularity parameter
-       mag1.poa = c(0.1,0.1),  # mag factor for poa models
-       mag1.sia = c(0.1,0.1),  # mag factor for sia models
-       mag.sphe = c(1.0,1.0,0.01), # mag factor for spherical model
-       percent = TRUE, # print p-values in percent
-       digits.pval = 2, # significant digits for pvalue
-       digits.coef = 4, # significant digits for coefficients
-       th.aicw = 1e-4,  # threshold for akaike weights
+  ## sbfit
+  models = sbmodelnames(), # default models for fitting
+  control = list(reltol=1e-14),  # for optim
+  method = NULL,  # for optim
+  ## poly model
+  mag.poly = c(1,0.1,0.01,0.001), # mag factor for par in poly model
+  ## sing model
+  mag.sing = c(1,0.1,0.01,0.001),  # mag factor for par in sing model
+  mag1.sing = 0.1,  # mag factor for singularity parameter
+  ## sphe model
+  mag.sphe = c(1.0,1.0,0.01), # mag factor for spherical model
+  ## poa and pob models
+  mag1.poa = c(0.1,0.1),  # mag factor for poa models
+  mag1.sia = c(0.1,0.1),  # mag factor for sia models
+  lim.poa = c(1,10), # lower and upper limits dif parm of poa
+  lim.sia = c(1,10), # lower limit dif parm of sia
+  omg.poa = 0.1, # weight for penality on dif parm of poa
+  omg.sia = 0.1, # weight for penality on dif parm of sia
+  ## print parameters
+  percent = TRUE, # print p-values in percent
+  digits.pval = 2, # significant digits for pvalue
+  digits.coef = 4, # significant digits for coefficients
+  ## averaging models
+  th.aicw = 1e-4,  # threshold for akaike weights
 
-       ## sbconf; only experimental...
-       probs0=c(0.001,0.01,0.1,0.9,0.99,0.999), # initial grid
-       prob0=0.5, # for starting value
-       tol.mono=0.1,  # for monotonicity checking
-       tol.conv=0.01, # for convergence
-       tol.relconv=0.5, # tolerance with respect to s.e. 
-       max.loop=100, # max iterations
+  ## sbconf; only experimental...
+  probs0=c(0.001,0.01,0.1,0.9,0.99,0.999), # initial grid
+  prob0=0.5, # for starting value
+  tol.mono=0.1,  # for monotonicity checking
+  tol.conv=0.01, # for convergence
+  tol.relconv=0.5, # tolerance with respect to s.e. 
+  max.loop=100, # max iterations
 
-       ## for debug
-       debug=FALSE
-       )
+  ## for debug
+  debug=FALSE
+  )
   options(scaleboot=op)
 }
 
