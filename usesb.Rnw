@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.6 2006/11/14 15:08:10 shimo Exp shimo $
+% $Id: usesb.Rnw,v 1.7 2007/11/07 01:53:48 shimo Exp shimo $
 %%\VignetteIndexEntry{Multiscale Bootstrap using Scaleboot Package}
-\def\documentid{\getTime-stamp: "2007-11-06 16:32:09 shimo"}
+\def\documentid{\getTime-stamp: "2007-11-15 17:28:06 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -148,9 +148,13 @@ nb <- 10000
 
 X.sb <- scaleboot(X,nb,sa,countw,mc1)
 @ 
-The result is shown by
+The main result (for $k=3$) is shown by
 <<ans1>>=
-summary(X.sb)
+summary(X.sb)  # k = 3 (default)
+@ 
+We can also see additional results by specifying $k$,
+<<ans1b>>=
+summary(X.sb, k=1:3)  # k = 1, 2, 3
 @ 
 
 A class of AU $p$-values $p_k$ indexed by $k=1,2,3$, are calculated,
@@ -612,7 +616,7 @@ mam15.trees <- mam15.relltest[1:15]
 stat <- attr(mam15.trees,"stat")
 o <- order(stat)
 mam15.trees <- mam15.trees[o]
-summary(mam15.trees)
+summary(mam15.trees, k=1:3)
 @ 
 
 Next we look at the $p$-values. We confirm that $p_1$ (the second
