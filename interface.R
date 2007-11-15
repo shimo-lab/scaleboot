@@ -31,17 +31,13 @@ sbfit.pvclust <- function(x,...)
 ## y <- sbfits(x.old)
 ## x.new <- mbpvclust(x.old,y) # use "k.2"
 ## x.new <- mbpvclust(x.old,y,k=3) # use "k.3"
-sbpvclust <- function(x,mbs,k=3,k.bp=1,select="average",...) {
-  a <- summary(mbs,k=c(k.bp,k),...)
+sbpvclust <- function(x,mbs,k=3,select="average",...) {
+  a <- summary(mbs,k=k,...)
   selpv <- selectpv(a,select)
-  pv.bp <- sapply(selpv$pvpe,function(b) b$pv[[1]])  
-  pe.bp <- sapply(selpv$pvpe,function(b) b$pe[[1]])  
-  pv <- sapply(selpv$pvpe,function(b) b$pv[[2]])  
-  pe <- sapply(selpv$pvpe,function(b) b$pe[[2]])  
+  pv <- sapply(selpv$pvpe,function(b) b$pv)  
+  pe <- sapply(selpv$pvpe,function(b) b$pe)  
   x$edges[,"au"] <- pv
   x$edges[,"se.au"] <- pe
-  x$edges[,"bp"] <- pv.bp
-  x$edges[,"se.bp"] <- pe.bp
   x
 }
 

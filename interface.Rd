@@ -20,7 +20,7 @@ read.cnt(file)
 
 \method{sbfit}{pvclust}(x,...)
 
-sbpvclust(x,mbs,k=3,k.bp=1,select="average",...)
+sbpvclust(x,mbs,k=3,select="average",...)
 }
 \arguments{
   \item{file}{character of a file name to be read.}
@@ -30,7 +30,6 @@ sbpvclust(x,mbs,k=3,k.bp=1,select="average",...)
   \item{x}{an object of class \code{"pvclust"}.}
   \item{mbs}{an object of class \code{"scalebootv"}.}
   \item{k}{numeric of \eqn{k} for a AU p-value.}
-  \item{k.bp}{numeric of \eqn{k} for a BP p-value.}
   \item{select}{character of model name (such as "poly.3") or one of
 "average" and "best".}
   \item{...}{further arguments passed to or from other methods.}
