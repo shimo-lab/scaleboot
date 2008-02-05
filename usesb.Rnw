@@ -1,7 +1,7 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.7 2007/11/07 01:53:48 shimo Exp shimo $
+% $Id: usesb.Rnw,v 1.8 2007/11/15 08:29:05 shimo Exp shimo $
 %%\VignetteIndexEntry{Multiscale Bootstrap using Scaleboot Package}
-\def\documentid{\getTime-stamp: "2007-11-15 17:28:06 shimo"}
+\def\documentid{\getTime-stamp: "2008-02-05 12:42:27 shimo"}
 \def\getTime-stamp: "#1"{#1}
 
 \documentclass[a4paper]{amsart}
@@ -14,7 +14,7 @@
 
 \title{Multiscale Bootstrap using Scaleboot Package}
 \author{Hidetoshi Shimodaira}
-\thanks{This document is a part of the {\tt scaleboot} package (Version 0.3-1 or newer). The source file is usesb.Rnw (\documentid).
+\thanks{This document is a part of the {\tt scaleboot} package (Version 0.3-2 or newer). The source file is usesb.Rnw (\documentid).
 I thank Paul A. Sheridan for his comments to improve the manuscript.}
 \address{Department of Mathematical and Computing Sciences\\
 Tokyo Institute of Technology\\
@@ -42,6 +42,8 @@ boundaries (Shimodaira 2008).
 The basic usage of this package is illustrated in a simple example
 below.  Then real applications in hierarchical clustering and
 phylogenetic inference are shown later.
+
+For the use of {\tt scaleboot}, Shimodaira (2008) may be referenced.
 
 \section{Install}
 
@@ -164,7 +166,7 @@ parentheses.  We should look at the row of {\tt average} (the bottom
 line), and we can ignore the other rows.  $p_1\approx 1\%$ corresponds
 to the ordinary BP, and $p_2\approx 18\%$ corresponds to the AU
 $p$-value of Shimodaira (2002).  What we recommend to use here is
-$p_3\approx41\%$; this is the AU $p$-value of Shimodaira (2008).  For
+$p_3\approx40\%$; this is the AU $p$-value of Shimodaira (2008).  For
 this particular example, the common practice for calculating a
 $p$-value is to use the multiple comparisons method. If it is applied
 to $y$, the $p$-value is $p=66\%$, which is rather close to $p_3$ in
@@ -420,8 +422,8 @@ All the calculated $p$-values for node 67 are given by
 <<lungpval67>>=
 summary(lung73.sb[[67]])
 @ 
-The extrapolation using the best model is shown
-(Fig.~\ref{fig:lungext67}) by
+The extrapolation using the best models (averaged by the Akaike
+weights) is shown (Fig.~\ref{fig:lungext67}) by
 <<lungext67,echo=true,fig=false>>=
 plot(summary(lung73.sb[[67]]),legend="topleft")
 @ 
@@ -673,6 +675,7 @@ Shimodaira, H.
 Shimodaira, H. (2008)
 \newblock Testing Regions with Nonsmooth Boundaries via Multiscale Bootstrap.
 \newblock \emph{Journal of Statistical Planning and Inference}
+{\bf 138} 1227-1241
 (\url{http://dx.doi.org/10.1016/j.jspi.2007.04.001}).
 
 \bibitem{bib:SH1999} 
