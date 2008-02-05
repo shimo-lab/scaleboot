@@ -139,11 +139,11 @@ sbfit(x, ...)
   Shimodaira, H. (2004).  Approximately unbiased tests of
   regions using multistep-multiscale bootstrap resampling,
   \emph{Annals of Statistics}, 32, 2616-2641. 
-  
-  Shimodaira, H. (2006).  Approximately Unbiased Tests 
-  for Singular Surfaces via Multiscale Bootstrap Resampling,
-  Research Report B-430, Dept. Mathematical and Computing
-  Sciences, Tokyo Institute of Technology, Tokyo.
+
+  Shimodaira, H. (2008). Testing Regions with Nonsmooth Boundaries via
+  Multiscale Bootstrap, \emph{Journal of Statistical Planning and
+    Inference}, 138, 1227-1241.
+  (\url{http://dx.doi.org/10.1016/j.jspi.2007.04.001}).
 }
 \author{Hidetoshi Shimodaira <shimo@is.titech.ac.jp>}
 \seealso{\code{\link{sbpsi}}, \code{\link{summary.scaleboot}},
