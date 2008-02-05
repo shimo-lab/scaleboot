@@ -50,6 +50,7 @@ sbfit1 <- function(bp,nb,sa,psi,inits,mag=1,omg=NULL,trg=NULL,
     y
   }
   fit <- optims(inits,obj,method=method,control=control,chkcoef=chkcoef)
+  fit$inits <- inits
   fit$mag <- mag
   fit$omg <- omg
   fit$trg <- trg
