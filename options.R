@@ -30,7 +30,8 @@ sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,rev.sided=FALSE,
   if(missing(sia)) sia <- if(two.sided) m else 0
   if(missing(pob)) pob <- if(rev.sided) m else 0
   if(missing(sib)) sib <- if(rev.sided) m else 0
-  if(missing(sphe)) sphe <- if(one.sided) m else 0
+#  if(missing(sphe)) sphe <- if(one.sided) m else 0
+  if(missing(sphe)) sphe <- 0
 
   make1 <- function(na,mm,min=1,max=Inf) {
     k <- mm[mm>=min & mm<=max]
@@ -70,18 +71,20 @@ sbmodelnames <- function(m=1:3,one.sided=TRUE,two.sided=FALSE,rev.sided=FALSE,
   method = NULL,  # for optim
   ## poly model
   mag.poly = c(1,0.1,0.01,0.001), # mag factor for par in poly model
+  omg.poly = c(0.1,1,1,1), # weights
   ## sing model
-  mag.sing = c(1,0.1,0.01,0.001),  # mag factor for par in sing model
-  mag1.sing = 0.1,  # mag factor for singularity parameter
+  mag1.sing = 0.1, # mag factor for singularity parameter
+  omg1.sing = 1.0, # weight 
   ## sphe model
   mag.sphe = c(1.0,1.0,0.01), # mag factor for spherical model
-  ## poa and pob models
-  mag1.poa = c(0.1,0.1),  # mag factor for poa models
-  mag1.sia = c(0.1,0.1),  # mag factor for sia models
-  lim.poa = c(1,10), # lower and upper limits dif parm of poa
-  lim.sia = c(1,10), # lower limit dif parm of sia
-  omg.poa = 0.1, # weight for penality on dif parm of poa
-  omg.sia = 0.1, # weight for penality on dif parm of sia
+  omg.sphe = c(0.1,1.0,1.0), # weights
+  chisq.sphe = FALSE, # use chisq for pvalues instead of extrapolation for k >= 2
+  ## dif parms of poa and pob models
+  mag1.poa = c(1,0.1),  # mag factor for dif parm
+  low1.poa = c(1,-3), # lower limits of dif parm
+  upp1.poa = c(7,3), # upper limits of dif parm
+  trg1.poa = c(10,0), # targets of dif parm
+  omg1.poa = c(1,1), # weights of dif parm
   ## print parameters
   percent = TRUE, # print p-values in percent
   digits.pval = 2, # significant digits for pvalue
@@ -116,3 +119,6 @@ sboptions <- function(x,value) {
   }
   y
 }
+
+######################################################################
+### EOF
