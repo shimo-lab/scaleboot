@@ -1,5 +1,5 @@
 % scaleboot/vignette.tex shimo@is.titech.ac.jp
-% $Id: usesb.Rnw,v 1.8 2007/11/15 08:29:05 shimo Exp shimo $
+% $Id: usesb.Rnw,v 1.9 2008/02/05 03:45:53 shimo Exp $
 %%\VignetteIndexEntry{Multiscale Bootstrap using Scaleboot Package}
 \def\documentid{\getTime-stamp: "2008-02-05 12:42:27 shimo"}
 \def\getTime-stamp: "#1"{#1}

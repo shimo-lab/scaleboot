@@ -3,7 +3,6 @@
 \alias{sbpsi.poly}
 \alias{sbpsi.sing}
 \alias{sbpsi.sphe}
-\alias{sbpsi.generic}
 \alias{sbmodelnames}
 \title{Model Specification Functions}
 \description{
@@ -17,8 +16,6 @@ sbpsi.poly(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE)
 sbpsi.sing(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE)
 
 sbpsi.sphe(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE)
-
-sbpsi.generic(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,zfun,eps=0.01)
 
 sbmodelnames(m=1:3,one.sided=TRUE,two.sided=FALSE,rev.sided=FALSE,poly,sing,poa,pob,sia,sib,sphe)
 }
@@ -62,8 +59,6 @@ sbmodelnames(m=1:3,one.sided=TRUE,two.sided=FALSE,rev.sided=FALSE,poly,sing,poa,
   for \eqn{m\ge3} and \eqn{0\le\beta_{m-1}\le1}.
   \code{sbpsi.sphe} defines the spherical model; currently the number of
   parameters must be $m=3$.
-  \code{sbpsi.generic} is to calculate psi value and extrapolation from
-  a given z-function.
 
   For \eqn{k>1}, the \code{sbpsi} functions return values extrapolated at
   \eqn{\sigma^2=\sigma_p^2} using derivatives up to order \eqn{k-1}
