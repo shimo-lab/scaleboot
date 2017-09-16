@@ -1,0 +1,14 @@
+mam15.aa: amino acid sequences (N=3414) for the six mammals.
+mam15.ass: association vectors for edges and trees.
+mam15.lnf: site-wise log-likelihood values (output from PAML).
+mam15.log: detailed information for the associations.
+mam15.mt: site-wise log-likelihood values (output from seqmt).
+mam15.tpl: 15 tree topologies.
+
+All the files are in simple text format.
+
+This dataset was originally used in:
+
+H. Shimodaira and M. Hasegawa (1999). Multiple comparisons of
+log-likelihoods with applications to phylogenetic inference, Molecular
+Biology and Evolution, 16, 1114-1116.
