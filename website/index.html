@@ -4,8 +4,18 @@
 
 	<head>
 	    <meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
-		<meta name="generator" content="Adobe GoLive">
 		<title>scaleboot Home Page</title>
+
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-102198842-1', 'auto');
+  ga('send', 'pageview');
+
+		</script>
 	</head>
 
 	<body bgcolor="#ffffff">
@@ -15,47 +25,42 @@
 		<p></p>
 		<div align="center">
 			<p>scaleboot: Approximately Unbiased P-values via Multiscale Bootstrap</p>
-            <p>
-            <a href="http://www3.clustrmaps.com/counter/maps.php?url=http://www.is.titech.ac.jp/~shimo/" id="clustrMapsLink"><img src="http://www3.clustrmaps.com/counter/index2.php?url=http://www.is.titech.ac.jp/~shimo/" style="border:0px;" alt="Locations of visitors to this page" title="Locations of visitors to this page" id="clustrMapsImg" onerror="this.onerror=null; this.src='http://www2.clustrmaps.com/images/clustrmaps-back-soon.jpg'; document.getElementById('clustrMapsLink').href='http://www2.clustrmaps.com';" />
-</a>
-            </p>
+
+<!-- ClustrMaps -->
+<script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=300&t=m&d=0z3HG7JCnh7SUbIkSwTemJOgMT51s5ste2nBb5bOdy8"></script>
+<!-- ClustrMaps -->
+
 		</div>
 		<div align="left">
 			<p><br>
 			</p>
 			<h3><i>Contact</i></h3>
 			Hidetoshi Shimodaira<br>
-			Department of Mathematical and Computing Sciences<br>
-			Tokyo Institute of Technology<br>
-			Ookayama, Meguroku, Tokyo 152-8552, JAPAN<br>
-			shimo (a) is.titech.ac.jp<br>
-			<a href="../../index.html">http://www.is.titech.ac.jp/~shimo/</a><br>
+			Graduate School of Informatics<br>
+			Kyoto University<br>
+			Jointly affiliated at RIKEN AIP<br>
+			<a href="http://stat.sys.i.kyoto-u.ac.jp">
+			Lab website</a>
+
 		</div>
 		<br>
 		<h3><i>What is scaleboot?</i></h3>
 		<p>scaleboot is an add-on package of R. This is for calculating approximately unbiased (AU) p-values from a set of multiscale bootstrap probabilities for a hypothesis. Scaling is equivalent to changing the sample size of data set in bootstrap resampling. We calculate bootstrap probabilities at several scales, from which a very accurate p-value is calculated.  This multiscale bootstrap method has been implemented in <a href="../consel/index.html">CONSEL software</a> and  <a href="../pvclust/index.html">pvclust package</a>. The thrust of scaleboot package is to calculate an improved version of AU p-values which are justified even for hypotheses with nonsmooth boundaries by taking care of the singularity.</p>
 		<p>scaleboot package includes an interface to <a href="../pvclust/index.html">pvclust package</a> of R for bootstrapping hierarchical clustering. We use pvclust to calculate multiscale bootstrap probabilities, from which we calculate an improved version of AU p-values using scaleboot. </p>
 		<p>scaleboot has a front end for phylogenetic inference, and it can replace <a href="../consel/index.html">CONSEL software</a> for testing phylogenetic trees. Currently, scaleboot does not have a method for file conversion of several phylogenetic software, and so we must use CONSEL for this purpose before applying scaleboot to calculate an improved version of AU p-values for trees and edges.</p>
-		<p><b>The package vignette &quot;Multiscale Bootstrap Using Scaleboot Package&quot; (<tt><a href="usesb.pdf">usesb.pdf</a></tt>) explains the methodology. It includes a simple example for illustration. It also includes real applications in hierarchical clustering and phylogenetic inference.  Further description is given in Shimodaira (2008). For the use of scaleboot, Shimodaira (2008) may be referenced.</b></p>
+		<p><b>The package vignette &quot;Multiscale Bootstrap Using Scaleboot Package&quot; (<tt>usesb.pdf</tt>) explains the methodology. It includes a simple example for illustration. It also includes real applications in hierarchical clustering and phylogenetic inference.  Further description is given in Shimodaira (2008). For the use of scaleboot, Shimodaira (2008) may be referenced.</b></p>
 		<p><br>
 		</p>
 		<h3><i>Install</i></h3>
 		<p>scaleboot is easily installed from CRAN online. Windows users can install the package by choosing &quot;scaleboot&quot; from the pull-down menu. Otherwise, run R on your computer and type</p>
 		<p><tt>&gt; install.packages(&quot;scaleboot&quot;)</tt></p>
 		<p></p>
-		<p>You can also download the package file below, and install manually.</p>
-		<p><tt>Current version: <a href="scaleboot_0.3-3.tar.gz">scaleboot_0.3-3.tgz</a> (2010/05/14)</tt> : only minor fixes for help pages from the previous version</p>
-		<p><tt>Previous version: <a href="scaleboot_0.3-2.tar.gz">scaleboot_0.3-2.tgz</a> (2008/02/05)</tt></p>
-	<p><tt>Manual: <a href="scaleboot.pdf">scaleboot.pdf</a>  (<a href="html/00Index.html">web version</a>)</tt></p>
-		<p><tt>Package vignette: <a href="usesb.pdf">usesb.pdf</a> (&quot;Multiscale Bootstrap Using Scaleboot Package&quot;)</tt></p>
 		<p><br>
 		</p>
 	<h3><i>Dataset files</i></h3>
-		<p>Supplementary dataset files for phylogenetic inference are available. See Note in <a href="html/mam15.html">help(mam15)</a>.</p>
-		<p><tt>Description: <a href="INDEX.txt">INDEX.txt</a></tt></p>
-		<p><tt>Compressed file: <a href="mam15-files.tgz">mam15-files.tgz</a> (unix),  <a href="mam15-files.zip">mam15-files.zip</a> (win)</tt></p>
-		<p><br>
-		</p>
+		<p>Supplementary dataset files for phylogenetic inference are available at <tt> dataset/mam15-files</tt> directory of
+		the <a href="http://github.com/shimo-lab/scaleboot">github site</a>.
+
 		<h3><i>References</i></h3>
 		<ul>
 			<li>Shimodaira, H. (2002).  An approximately unbiased test of phylogenetic tree selection, Systematic Biology, 51, 492-508. 

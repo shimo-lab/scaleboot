@@ -32,3 +32,11 @@ clustering and phylogenetic inference. Further description is given in
 Shimodaira (2008). For the use of scaleboot, Shimodaira (2008) may be
 referenced.
 
+The official website of scaleboot is
+http://stat.sys.i.kyoto-u.ac.jp/prog/scaleboot/
+
+The CRAN site is
+http://cran.r-project.org/web/packages/scaleboot/
+
+The package is now developped at the github site
+http://github.com/shimo-lab/scaleboot
