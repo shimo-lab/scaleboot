@@ -2,12 +2,12 @@ Package: scaleboot
 Type: Package
 Title: Approximately Unbiased P-values via Multiscale Bootstrap
 Version: 0.3-3
-Date: 2008-xx-xx
+Date: 2010-05-14
 Author: Hidetoshi Shimodaira
 Maintainer: Hidetoshi Shimodaira <shimo@is.titech.ac.jp>
 Depends: R (>= 2.0.0)
-Suggests: pvclust (>= 1.2.0), snow, Rmpi
+Suggests: pvclust (>= 1.2.0), snow
 Description: Calculating approximately unbiased (AU) p-values 
   from multiscale bootstrap probabilities.
-License: GPL (>= 2)
+License: GPL version 2 or newer
 URL: http://www.is.titech.ac.jp/~shimo/prog/scaleboot/
