@@ -1,0 +1,72 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R は、自由なソフトウェアであり、「完全に無保証」です。 
+一定の条件に従えば、自由にこれを再配布することができます。 
+配布条件の詳細に関しては、'license()' あるいは 'licence()' と入力してください。 
+
+R は多くの貢献者による共同プロジェクトです。 
+詳しくは 'contributors()' と入力してください。 
+また、R や R のパッケージを出版物で引用する際の形式については 
+'citation()' と入力してください。 
+
+'demo()' と入力すればデモをみることができます。 
+'help()' とすればオンラインヘルプが出ます。 
+'help.start()' で HTML ブラウザによるヘルプがみられます。 
+'q()' と入力すれば R を終了します。 
+
+> ## makedata.R
+> 
+> nb.rell = 100000
+> nb.pvclust = 10000
+> 
+> date()
+[1] "Sat Sep 16 23:13:29 2017"
+> library(parallel)
+> library(pvclust)
+> library(scaleboot)
+> 
+> length(cl <- makeCluster(detectCores()))
+[1] 8
+> 
+> date()
+[1] "Sat Sep 16 23:13:30 2017"
+> 
+> mam15.mt <- read.mt("mam15-files/mam15.mt")
+Read 15 items of length 3414 
+> mam15.ass <- read.ass("mam15-files/mam15.ass")
+Read 10 items for 15 elements
+> sa <- 9^seq(-1,1,length=13)
+> mam15.relltest <- relltest(mam15.mt,nb=nb.rell,sa=sa,ass=mam15.ass,cluster=cl)
+> save(mam15.mt,mam15.ass,mam15.relltest,file="data/mam15.RData")
+> 
+> date()
+[1] "Sat Sep 16 23:21:36 2017"
+> 
+> mam105.mt <- read.mt("mam105-files/mam105.mt")
+Read 105 items of length 3414 
+> mam105.ass <- read.ass("mam105-files/mam105.ass")
+Read 25 items for 105 elements
+> sa <- 9^seq(-1,1,length=13)
+> mam105.relltest <- relltest(mam105.mt,nb=nb.rell,sa=sa,ass=mam105.ass,cluster=cl)
+> save(mam105.mt,mam105.ass,mam105.relltest,file="data/mam105.RData")
+> 
+> date()
+[1] "Sun Sep 17 00:15:29 2017"
+> 
+> data(lung)
+> sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
+> lung73.pvclust <- pvclust(lung,r=1/sa,nboot=nb.pvclust,parallel=cl) 
+Multiscale bootstrap... Done.
+> lung73.sb <- sbfit(lung73.pvclust,cluster=cl) # model fitting
+> save(lung73.pvclust,lung73.sb,file="data/lung73.RData")
+> 
+> 
+> date()
+[1] "Sun Sep 17 00:40:50 2017"
+> quit(save="no")
+> proc.time()
+   ユーザ   システム       経過  
+     1.372      0.166   5241.054 
