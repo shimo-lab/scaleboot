@@ -9,5 +9,5 @@ Depends: R (>= 2.10.0)
 Suggests: pvclust (>= 2.0-0), parallel
 Description: Calculating approximately unbiased (AU) p-values 
   from multiscale bootstrap probabilities.
-License: GPL version 2 or newer
+License: GPL (>= 2)
 URL: http://stat.sys.i.kyoto-u.ac.jp/prog/scaleboot/
