@@ -2,3 +2,4 @@
 /src.Rcheck/
 /scaleboot/
 /*.tar.gz
+.Rproj.user
