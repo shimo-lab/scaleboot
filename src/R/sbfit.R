@@ -116,7 +116,7 @@ sbfit.default <- function(x,nb,sa,models=NULL,nofit=FALSE,
       ## diagnostics of model fitting
       ans$df <- length(bp)+length(bpm)-length(ans$par) # degrees of freedom
       ans$rss <- 2*(ans$value-lik0) # likelihood ratio test statistic
-      if(ans$df>0) ans$pfit <- pchisq(ans$rss,lower=F,df=ans$df) # p-value
+      if(ans$df>0) ans$pfit <- pchisq(ans$rss,lower.tail=F,df=ans$df) # p-value
       else ans$pfit <- 1.0
       ans$aic <- ans$rss - 2*ans$df # aic
 
