@@ -1,5 +1,6 @@
 
-/src.Rcheck/
+/scaleboot.Rcheck/
 /scaleboot/
 /*.tar.gz
 .Rproj.user
+.Rhistory

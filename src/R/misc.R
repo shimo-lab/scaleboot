@@ -184,7 +184,7 @@ optims <- function(coefs,fn,chkcoef=NULL,eps=1e-3,...) {
 
 ## solvex: a stable inverse of symmetric matrix
 solvex <- function(x,tol=1e-16) {
-  e <- eigen(x,sym=T) # eigen values and vectors
+  e <- eigen(x,symmetric=T) # eigen values and vectors
   val <- e$val # eigen values
   ##  u <- abs(val) < tol # almost zero values
   u <- val < tol

@@ -35,7 +35,8 @@ mam15.relltest
   virginiana (opossum).  The data is stored in the file \file{mam15.aa},
   which contains amino acid sequences of length N=3414 for the six
   species obtained from mtDNA (see Note below).
-  We consider 15 tree topologies of the six mammals as stored in the
+  Here we fix (Phovi,Bosta) as a group of taxa.
+  With this constraint, we consider 15 tree topologies of the six mammals as stored in the
   file \file{mam15.tpl}; 
 
 \preformatted{  
@@ -308,9 +309,9 @@ Best Model:  sing.3
 }
 \note{
   Dataset files for phylogenetic inference are found at
-  \url{http://www.is.titech.ac.jp/~shimo/prog/scaleboot/}.
-  For Unix users, download \file{mam15-files.tgz}, and for Windows users
-  download \file{mam15-files.zip}.  This dataset
+  \url{http://github.com/shimo-lab/scaleboot}.
+  Look at the subdirectory \file{dataset/mam15-files}.
+  This dataset
   was originally used in Shimodaira and Hasegawa (1999).
   }
 \source{
@@ -327,7 +328,7 @@ Best Model:  sing.3
   Shimodaira, H. and Hasegawa, M. (2001). CONSEL: for assessing the
   confidence of phylogenetic tree selection, \emph{Bioinformatics}, 17,
   1246-1247 (software is available from
-  \url{http://www.is.titech.ac.jp/~shimo/prog/consel/}).
+  \url{http://stat.sys.i.kyoto-u.ac.jp/prog/consel/}).
 }
 \seealso{\code{\link{relltest}}, \code{\link{summary.scalebootv}},
   \code{\link{read.mt}}, \code{\link{read.ass}}.}
