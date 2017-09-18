@@ -181,6 +181,7 @@ f # print the result of fitting
 plot(f,legend="topleft") # observed bp's and fitted curves
 summary(f) # calculate and print p-values
 
+\dontrun{
 ## Testing multiple hypotheses (only two here)
 ## Examples of fitting models to vectors of bp's
 ## mam15.relltest[c("t1,t2")]
@@ -196,7 +197,7 @@ fv <- sbfit(bps,nb,sa) # returns a "scalebootv" object
 fv # print the result of fitting
 plot(fv) # multiple plots
 summary(fv) # calculate and print p-values
-
+}
 }
 \keyword{ models }
 \keyword{ nonparametric }
