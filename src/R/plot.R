@@ -327,10 +327,10 @@ lines.scaleboot <- function(x,z,
 sblegend <- function(x="topright",y=NULL,z,inset=0.1,...) {
   if(length(z)==1) z <- z[[1]]
   if(is.null(z$labels)) return(invisible(NULL))
-  lty <- rep(z$lty,length=length(z$labels))
-  pch <- rep(z$pch,length=length(z$labels))
   if(is.null(do.lines <- z$do.lines)) do.lines <- F 
   if(is.null(do.points <- z$do.points)) do.points <- F
+  if(do.lines) lty <- rep(z$lty,length=length(z$labels))
+  if(do.points) pch <- rep(z$pch,length=length(z$labels))
   if(do.lines && ! do.points) 
     legend(x,y,z$labels,col=z$col,lwd=z$lwd,lty=lty,inset=inset,...)
   else if(!do.lines &&  do.points) 
