@@ -74,3 +74,4 @@ export(read.mt,read.ass,read.cnt)
 ### additional
 importFrom("parallel", "parLapply")
 importFrom("mvtnorm", "pmvnorm")
+

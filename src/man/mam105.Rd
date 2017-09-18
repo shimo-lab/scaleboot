@@ -60,7 +60,7 @@ mam105.relltest <- relltest(mam105.mt,nb=100000,ass=mam105.ass)
 ## Parallel version of the above script (but different in random seed)
 mam105.mt <- read.mt("mam105.mt")
 mam105.ass <- read.ass("mam105.ass")
-library(snow)
+library(parallel)
 cl <- makeCluster(40)
 mam105.relltest <- relltest(mam105.mt,nb=100000,ass=mam105.ass,cluster=cl)
 }
