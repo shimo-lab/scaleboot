@@ -330,7 +330,8 @@ Best Model:  sing.3
   1246-1247 (software is available from
   \url{http://stat.sys.i.kyoto-u.ac.jp/prog/consel/}).
 }
-\seealso{\code{\link{relltest}}, \code{\link{summary.scalebootv}},
+\seealso{\code{\link{mam105}}, \code{\link{relltest}}, 
+  \code{\link{summary.scalebootv}},
   \code{\link{read.mt}}, \code{\link{read.ass}}.}
 \examples{
 data(mam15)
@@ -358,7 +359,7 @@ mam15.relltest <- relltest(mam15.mt,nb=100000,ass=mam15.ass)
 ## It took 13 mins (40 cpu's of Athlon MP 2000+)
 mam15.mt <- read.mt("mam15.mt")
 mam15.ass <- read.ass("mam15.ass")
-library(snow)
+library(parallel)
 cl <- makeCluster(40)
 mam15.relltest <- relltest(mam15.mt,nb=100000,ass=mam15.ass,cluster=cl)
 }
