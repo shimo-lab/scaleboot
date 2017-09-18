@@ -105,6 +105,7 @@ wsumrow <- function(x,w) {
   apply(w*x,2,sum)*nrow(x)/sum(w)
 }
 
+\dontrun{
 ## a quick example with nb=1000 (fairely fast in 2017)
 ## Compute multiscale bootstrap replicates
 nb <- 1000 # nb = 10000 is better but slower
@@ -120,6 +121,8 @@ sim <- scaleboot(mam15.mt,nb,sa,myfun,"t4",count=FALSE,onlyboot=TRUE)
 ## plot diagnostics for computing the confidence limits
 plot(conf3) # AIC values for models v.s. test statistic value
 plot(conf3,yval="zval",type="l") # corrected "k.3" z-value
+}
+
 
 \dontrun{
 ## a longer example with nb=10000 (it was slow in 2010)

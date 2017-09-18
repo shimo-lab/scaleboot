@@ -91,11 +91,13 @@ relltest(dat,nb=10000,sa=9^seq(-1,1,length=13),ass=NULL,
 \seealso{\code{\link{sbfit}}, \code{\link{scaleboot}}, \code{\link{mam15}}.}
 \examples{
 
+\dontrun{
 ## a quick example
 data(mam15) # loading mam15.mt
-mam15.trees <- relltest(mam15.mt,nb=100) # nb=10000 is default
+mam15.trees <- relltest(mam15.mt,nb=1000) # nb=10000 is default
 mam15.trees # SH-test p-values and result of fitting
 summary(mam15.trees) # AU p-values
+}
 
 \dontrun{
 ## An example from data(mam15).

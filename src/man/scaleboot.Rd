@@ -136,6 +136,7 @@ hypotheses are supported by the bootstrap replicates.
 \author{Hidetoshi Shimodaira}
 \seealso{\code{\link{sbfit}}, \code{\link{sbconf}}, \code{\link{relltest}}.}
 \examples{
+\dontrun{
 ## An example to calculate AU p-values for phylogenetic trees
 ## See also the Examples of "sbconf"
 data(mam15) # load mam15.mt
@@ -145,6 +146,7 @@ nb <- 1000 # nb=10000 is better but slower
 sim <- scaleboot(mam15.mt,nb,sa,countw.assmax) # takes some time (< 1 min)
 sim # show bootstrap probabilities and model fitting
 summary(sim) # show AU p-vaslues
+}
 
 \dontrun{
 ## The following lines are only for illustration purpose
