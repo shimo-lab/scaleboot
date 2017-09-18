@@ -139,15 +139,15 @@ hypotheses are supported by the bootstrap replicates.
 ## An example to calculate AU p-values for phylogenetic trees
 ## See also the Examples of "sbconf"
 data(mam15) # load mam15.mt
-sa <- 10^seq(-2,2,length=13) # parameter for multiscale bootstrap
-nb <- 1000 # nb=10000 is better
+sa <- 9^seq(-1,1,length=13) # parameter for multiscale bootstrap
+nb <- 1000 # nb=10000 is better but slower
 # Now compute bootstrap probabilities and fit models to them
-sim <- scaleboot(mam15.mt,nb,sa,countw.assmax)
+sim <- scaleboot(mam15.mt,nb,sa,countw.assmax) # takes some time (< 1 min)
 sim # show bootstrap probabilities and model fitting
-summar(sim) # show AU p-vaslues
+summary(sim) # show AU p-vaslues
 
 \dontrun{
-## The following lines are taken from other functions for illustration
+## The following lines are only for illustration purpose
 ## a line from the definition of relltest
 scaleboot(dat,nb,sa,countw.assmax,ass,cluster=cluster,
                  names.hp=na,nofit=nofit,models=models,seed=seed)

@@ -107,7 +107,8 @@ wsumrow <- function(x,w) {
 
 ## a quick example with nb=1000 (fairely fast in 2017)
 ## Compute multiscale bootstrap replicates
-nb <- 1000
+nb <- 1000 # nb = 10000 is better but slower
+# the following line takes some time (less than 1 minute in 2017)
 sim <- scaleboot(mam15.mt,nb,sa,myfun,"t4",count=FALSE,onlyboot=TRUE)
 
 ## show 90% confidence interval for p=(0.05, 0.95)

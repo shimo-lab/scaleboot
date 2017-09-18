@@ -5,8 +5,8 @@ Version: 0.3-4
 Date: 2017-09-18
 Author: Hidetoshi Shimodaira
 Maintainer: Hidetoshi Shimodaira <shimo@i.kyoto-u.ac.jp>
-Depends: R (>= 2.10.0), pvclust (>= 2.0-0)
-Imports: parallel, mvtnorm
+Depends: R (>= 2.10.0)
+Imports: pvclust (>= 2.0-0), mvtnorm
 Description: Calculating approximately unbiased (AU) p-values
 	from multiscale bootstrap probabilities. See
 	Shimodaira (2004) <doi:10.1214/009053604000000823> and

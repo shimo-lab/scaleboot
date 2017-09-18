@@ -15,11 +15,11 @@
 \title{Multiscale Bootstrap using Scaleboot Package}
 \author{Hidetoshi Shimodaira}
 \thanks{This document is a part of the {\tt scaleboot} package (Version 0.3-2 or newer). The source file is usesb.Rnw (\documentid).
+Minor updates (change of address and URL) are made in Version 0.3-4.
 I thank Paul A. Sheridan for his comments to improve the manuscript.}
-\address{Department of Mathematical and Computing Sciences\\
-Tokyo Institute of Technology\\
-2-12-1 Ookayama, Meguro-ku, Tokyo 152-8552, Japan}
-\email{shimo@is.titech.ac.jp}
+\address{Graduate School of Informatics, Kyoto University,
+Yoshida Honmachi, Sakyo-ku, Kyoto, 606-8501, Japan}
+\email{shimo@i.kyoto-u.ac.jp}
 
 
 \maketitle
@@ -56,7 +56,7 @@ install.packages("scaleboot")
 You can also download the package file from the URL below and
 install it manually.
 
-\url{http://www.is.titech.ac.jp/~shimo/prog/scaleboot/}
+\url{http://stat.sys.i.kyoto-u.ac.jp/prog/scaleboot/}
 
 
 \section{Simple Example}
@@ -683,13 +683,13 @@ Shimodaira, H. and Hasegawa, M. (2001)
 \newblock CONSEL: for assessing the
   confidence of phylogenetic tree selection.
 \newblock \emph{Bioinformatics} {\bf 17} 1246--1247 (software is available from
-  \url{http://www.is.titech.ac.jp/~shimo/prog/consel/}).
+  \url{http://stat.sys.i.kyoto-u.ac.jp/prog/consel/}).
 
 \bibitem{bib:SS2006}
 Suzuki, R. and Shimodaira, H. (2006)
 \newblock pvclust: An R package for hierarchical clustering with $p$-values.
 \newblock \emph{Bioinformatics} {\bf 22} 1540--1542 (software is available from
-\url{http://www.is.titech.ac.jp/~shimo/prog/pvclust/}).
+\url{http://stat.sys.i.kyoto-u.ac.jp/prog/pvclust/}).
 
 \bibitem{bib:Yang1997}
 Yang, Z. (1997)
