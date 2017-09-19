@@ -4,3 +4,4 @@
 /*.tar.gz
 .Rproj.user
 .Rhistory
+/dataset/data/*
