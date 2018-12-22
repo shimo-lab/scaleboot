@@ -1,8 +1,8 @@
 Package: scaleboot
 Type: Package
 Title: Approximately Unbiased P-Values via Multiscale Bootstrap
-Version: 0.3-4
-Date: 2017-09-18
+Version: 0.3-5
+Date: 2018-12-21
 Author: Hidetoshi Shimodaira
 Maintainer: Hidetoshi Shimodaira <shimo@i.kyoto-u.ac.jp>
 Depends: R (>= 2.10.0)
