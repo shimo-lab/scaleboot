@@ -32,12 +32,33 @@ sbfit.pvclust <- function(x,...)
 ## x.new <- mbpvclust(x.old,y) # use "k.2"
 ## x.new <- mbpvclust(x.old,y,k=3) # use "k.3"
 sbpvclust <- function(x,mbs,k=3,select="average",...) {
-  a <- summary(mbs,k=k,...)
+  k=k[1] # uses only one k value
+  a <- summary(mbs,k=c(k,1),hypothesis="alternative",...) # compute k.k and k.1
   selpv <- selectpv(a,select)
-  pv <- sapply(selpv$pvpe,function(b) b$pv)  
-  pe <- sapply(selpv$pvpe,function(b) b$pe)  
+  ## bp uses k.1
+  bv <- sapply(selpv$pvpe,function(b) b$pv[2])  
+  be <- sapply(selpv$pvpe,function(b) b$pe[2])  
+  x$edges[,"bp"] <- bv
+  x$edges[,"se.bp"] <- be
+  ## au uses k.k
+  pv <- sapply(selpv$pvpe,function(b) b$pv[1])  
+  pe <- sapply(selpv$pvpe,function(b) b$pe[1])  
   x$edges[,"au"] <- pv
   x$edges[,"se.au"] <- pe
+  ## si uses sk.k
+  spv <- sapply(selpv$pvpe,function(b) b$spv[1])  
+  spe <- sapply(selpv$pvpe,function(b) b$spe[1])  
+  x$edges[,"si"] <- spv
+  x$edges[,"se.si"] <- spe
+  ## (v,c) uses (beta0,beta1)
+  aa <- sapply(selpv$pvpe,function(b) sbgetbetapar1(b$betapar)$beta)
+  x$edges[,"v"] <- aa["beta0",]
+  x$edges[,"c"] <- aa["beta1",]
+  ## pchi is not defined, so let it zero
+  x$edges[,"pchi"] <- 0
+  ## method overwrite
+  x$method <- c("scaleboot", paste("k=",k,sep=""))
+
   x
 }
 
