@@ -1,6 +1,6 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 
 R は、自由なソフトウェアであり、「完全に無保証」です。 
@@ -23,7 +23,7 @@ R は多くの貢献者による共同プロジェクトです。
 > nb.pvclust = 10000
 > 
 > date()
-[1] "Sat Sep 16 23:13:29 2017"
+[1] "Sun Dec 23 22:28:31 2018"
 > library(parallel)
 > library(pvclust)
 > library(scaleboot)
@@ -32,7 +32,7 @@ R は多くの貢献者による共同プロジェクトです。
 [1] 8
 > 
 > date()
-[1] "Sat Sep 16 23:13:30 2017"
+[1] "Sun Dec 23 22:28:33 2018"
 > 
 > mam15.mt <- read.mt("mam15-files/mam15.mt")
 Read 15 items of length 3414 
@@ -43,7 +43,7 @@ Read 10 items for 15 elements
 > save(mam15.mt,mam15.ass,mam15.relltest,file="data/mam15.RData")
 > 
 > date()
-[1] "Sat Sep 16 23:21:36 2017"
+[1] "Sun Dec 23 22:35:28 2018"
 > 
 > mam105.mt <- read.mt("mam105-files/mam105.mt")
 Read 105 items of length 3414 
@@ -54,7 +54,7 @@ Read 25 items for 105 elements
 > save(mam105.mt,mam105.ass,mam105.relltest,file="data/mam105.RData")
 > 
 > date()
-[1] "Sun Sep 17 00:15:29 2017"
+[1] "Sun Dec 23 23:09:55 2018"
 > 
 > data(lung)
 > sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
@@ -65,8 +65,8 @@ Multiscale bootstrap... Done.
 > 
 > 
 > date()
-[1] "Sun Sep 17 00:40:50 2017"
+[1] "Sun Dec 23 23:43:48 2018"
 > quit(save="no")
 > proc.time()
    ユーザ   システム       経過  
-     1.372      0.166   5241.054 
+     1.472      0.255   4516.794 
