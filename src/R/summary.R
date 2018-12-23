@@ -70,12 +70,15 @@ summary.scaleboot <- function(object,models=names(object$fi),
 
   ## no model fitting
   if(is.null(object$fi)) {
-    spv <- pv <- rep(object$raw$pv,length(pvnames))
-    spe <- pe <- rep(object$raw$pe,length(spvnames))
+    pv <- rep(object$raw$pv,length(pvnames))
+    pe <- rep(object$raw$pe,length(pvnames))
     names(pv) <- names(pe) <- pvnames
+    spv <- rep(object$raw$pv,length(spvnames))
+    spe <- rep(object$raw$pe,length(spvnames))
     names(spv) <- names(spe) <- spvnames
-    object$best <- list(model="raw",aic=0,pv=pv,pe=pe,spv=pv,spe=pe,betapar=NULL)
-    object$average <- list(model="raw",w=structure(1,names="raw"),pv=pv,pe=pe,spv=pv,spe=pe,betapar=NULL)
+    object$best <- list(model="raw",aic=0,pv=pv,pe=pe,spv=spv,spe=spe,betapar=NULL)
+    object$average <- list(model="raw",w=structure(1,names="raw"),pv=pv,pe=pe,spv=spv,spe=spe,betapar=NULL)
+    object$hypothesis <- ""
     return(object)
   }
 
@@ -218,6 +221,16 @@ sbbetapar1 <- function(fit,psi,s=1,lambda=0) {
   list(par=beta,var=var)
 }
 
+sbgetbetapar1 <- function(x) {
+  if(is.null(x)){
+    sd <- beta <- c(NA,NA) ; names(beta) <- c("beta0","beta1")
+  } else {
+    beta <- x$par
+    sd <- sqrt(diag(x$var))
+  }
+  list(beta=beta,sd=sd)
+}
+
 ## print
 print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...) {
   ## verbose
@@ -257,10 +270,9 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...)
   rownames(spvs)[1:2] <- rownames(spes)[1:2] <- c("best","average")
 
   ## beta0, beta1
-  betavs <- t(cbind(x$best$betapar$par, x$average$betapar$par, sapply(b$betapar,"[[","par")))
-  betaes <- t(sqrt(cbind(diag(x$best$betapar$var), diag(x$average$betapar$var), 
-                   sapply(b$betapar, function(a) diag(a$var)))))
-  rownames(betavs)[1:2] <- rownames(betaes)[1:2] <- c("best","average")
+  betabest <- sbgetbetapar1(x$best$betapar)
+  betaaverage <- sbgetbetapar1(x$average$betapar)
+  betaall <- c(list(best=betabest,average=betaaverage),lapply(x$betapar, sbgetbetapar1))
 #  dvs <- c(x$best$dv,x$average$dv,x$dv)
 #  des <- c(x$best$de,x$average$de,x$de)
 #  names(dvs)[1:2] <- names(des)[1:2] <- c("best","average")
@@ -290,11 +302,11 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...)
 #  beta0 <- myformat(c(pi,dvs),c(pi,des),digits=2)[-1]
 #  beta0best <- beta0[1:2]
 #  beta0 <- beta0[-(1:2)]
-  beta <- matrix("",nrow(betavs),ncol(betavs))
-  dimnames(beta) <- dimnames(betavs)
-  for(i in seq(length=ncol(betavs))) {
-    beta[,i] <- myformat(c(pi,betavs[,i]),c(pi,betaes[,i]),digits=2)[-1]
-  } 
+  beta <- matrix("",length(betaall), length(betaall[[1]]$beta))
+  dimnames(beta) <- list(names(betaall), names(betaall[[1]]$beta))
+  for(i in seq(length=length(betaall))) {
+    beta[i,] <- myformat(c(pi,betaall[[i]]$beta),c(pi,betaall[[i]]$sd),digits=2)[-1]
+  }
   betabest <- beta[1:2,,drop=F]
   beta <- beta[-(1:2),,drop=F]
 
@@ -324,10 +336,11 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...)
   cat("\nCorrected P-values by the Best Model and by Akaike Weights Averaging:\n")
 #  beta0 <- beta0best
 #  catmat(cbind(pvalbest,beta0))
-  catmat(cbind(pvalbest, spvalbest, betabest))
+  tabbest <- cbind(pvalbest, spvalbest, betabest)
+  catmat(tabbest)
   cat("\n")
 
-  invisible(x)
+  invisible(list(table.sort = tabj, table.best = tabbest))
 }
 
 
@@ -424,8 +437,9 @@ print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
 #  de <- sapply(selpv$pvpe,"[[","de")
 #  de[de>10] <- NA
 #  out[,"beta0"] <- myformat(c(pi,dv),c(pi,de),digits=2)[-1]
-  betav <- sapply(selpv$pvpe,function(a) a$betapar$par)
-  betae <- sapply(selpv$pvpe,function(a) sqrt(diag(a$betapar$var)))
+  beta <- lapply(selpv$pvpe,function(a) sbgetbetapar1(a$betapar))
+  betav <- sapply(beta,"[[","beta")
+  betae <- sapply(beta,"[[","sd")
   out[,"beta0"] <- myformat(c(pi,betav[1,]),c(pi,betae[1,]),digits=2)[-1]
   out[,"beta1"] <- myformat(c(pi,betav[2,]),c(pi,betae[2,]),digits=2)[-1]
 
@@ -442,7 +456,7 @@ print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
 
 #######
 ##
-## extract p-values
+## extract p-values & (beta0,beta1)
 
 ## general
 sbpval <- function(x,...) UseMethod("sbpval")
@@ -462,18 +476,23 @@ sbpval.summary.scaleboot <- function(x,
   if(select=="all") {
     pvalue <- cbind(pv,spv)
     sd <- cbind(pe,spe)
+    xx <- lapply(y$betapar,sbgetbetapar1)
+    beta=list(beta=t(sapply(xx,"[[","beta")),sd=t(sapply(xx,"[[","sd")))
   } else {
     pvalue <- c(pv,spv)
     sd <- c(pe,spe)
+    beta <- sbgetbetapar1(y$betapar)
   }
-  list(pvalue=pvalue,sd=sd,hypothesis=x$hypothesis)
+  list(pvalue=pvalue,pvalue.sd=sd,hypothesis=x$hypothesis,beta=beta$beta,beta.sd=beta$sd)
 }
 
 ## scalebootv
 sbpval.summary.scalebootv <- function(x,...) {
   y <- lapply(x,sbpval,...)
   pvalue <- sapply(y,"[[","pvalue")
-  sd <- sapply(y,"[[","sd")
+  pvalue.sd <- sapply(y,"[[","pvalue.sd")
   hypothesis <- sapply(y,"[[","hypothesis")
-  list(pvalue=pvalue,sd=sd,hypothesis=hypothesis)
+  beta <- sapply(y,"[[","beta")
+  beta.sd <- sapply(y,"[[","beta.sd")
+  list(pvalue=pvalue,pvalue.sd=pvalue.sd,hypothesis=hypothesis,beta=beta,beta.sd=beta.sd)
 }

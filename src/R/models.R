@@ -622,7 +622,7 @@ sbpsi.generic <- function(beta,s=1,k=1,sp=-1,lambda=NULL,aux=NULL,check=FALSE,zf
 ###  EXPERIMENTAL CODE FOR DIFFERENCE MODELS
 ###
 ###  Shimodaira (2010)
-###  Ann Inst Stat Math (2010) 62:189–208 DOI 10.1007/s10463-009-0247-z
+###  Ann Inst Stat Math (2010) 62:189-208 DOI 10.1007/s10463-009-0247-z
 ###  Frequentist and Bayesian measures of confidence via multiscale
 ###     bootstrap for testing three regions
 ###
