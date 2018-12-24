@@ -194,12 +194,19 @@ sbspv1 <- function(fit,psi,k=1,s=1,sp=-1,hypothesis="null",lambda=0) {
   pval <- function(par) {
     z0 = psi(fit$mag*par,s,k=k,sp=0,lambda=lambda)
     z1 = psi(fit$mag*par,s,k=k,sp=sp,lambda=lambda)
-    if(hypothesis=="null") pnorm(-z1)/pnorm(-z1+z0)
-    else 1 - pnorm(z1)/pnorm(z1-z0)
+    if(hypothesis=="null") {
+      if(z0>=0) pnorm(-z1)/pnorm(-z1+z0)
+      else 1.0
+    } else {
+      if(z0<=0) 1 - pnorm(z1)/pnorm(z1-z0)
+      else 0.0
+    }
   }
   pv <- pval(fit$par)
-  h <- nderiv(pval,fit$par)
-  pe <- sqrtx(h %*% fit$var %*% h)
+  if(0<pv && pv<1) {
+    h <- nderiv(pval,fit$par)
+    pe <- sqrtx(h %*% fit$var %*% h)
+  } else pe <- 0.0
   list(spv=pv,spe=pe)
 }
 
