@@ -159,9 +159,14 @@ summary(X.sb)  # k = 3 (default)
 The selective inference $p$-values (SI) are denoted as {\tt sk.3},
 and the non-selective AU $p$-values are denoted as {\tt k.3}.
 We can also see additional results by specifying $k$,
-<<ans1b>>=
+<<eval=false>>=
+summary(X.sb, k=1:3)  # k = 1, 2, 3
+@
+{\tiny
+<<ans1b,echo=false>>=
 summary(X.sb, k=1:3)  # k = 1, 2, 3
 @ 
+}
 
 A class of AU $p$-values $p_k$ indexed by $k=1,2,3$, are calculated,
 and they are labelled as {\tt k.1}, {\tt k.2}, and {\tt k.3}.  The
