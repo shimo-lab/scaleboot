@@ -400,8 +400,16 @@ selectpv <- function(x,select) {
   list(pvpe=pvpe,select=select,name=selna,outaic=outaic)
 }
 
-
 print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
+  y <- table.summary.scalebootv(x,select=select,sort.by=sort.by,...)
+  
+  ## sort and print
+  cat("\n",y$head,"\n",sep="")
+  catmat(y$out)
+  invisible(y)
+}
+
+table.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
   ## extract information
   pvalues <- attr(x,"pvalues")
   spvalues <- attr(x,"spvalues")
@@ -451,14 +459,14 @@ print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
   out[,"beta1"] <- myformat(c(pi,betav[2,]),c(pi,betae[2,]),digits=2)[-1]
 
   ## sort and print
-  cat("\nCorrected P-values by ",selpv$name," (",a$name,",",a$lambda,"):\n",sep="")
+  head=paste("Corrected P-values by ",selpv$name," (",a$name,",",a$lambda,"):",sep="")
   if(!is.null(sort.by) && sort.by!="none") {
     j <- order(-outval[,sort.by])
-    catmat(out[j,])
-  } else catmat(out)
+    out <- out[j,]
+  }
 
 #  invisible(x)
-  invisible(list(out=out, outval=outval))
+  list(out=out, head=head, outval=outval)
 }
 
 #######

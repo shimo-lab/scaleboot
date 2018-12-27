@@ -324,7 +324,7 @@ Best Model:  sing.3
   maximum likelihood, \emph{Computer Applications in BioSciences},
   13:555-556 (software is available from
   \url{http://abacus.gene.ucl.ac.uk/software/paml.html}).
-  
+
   Shimodaira, H. and Hasegawa, M. (2001). CONSEL: for assessing the
   confidence of phylogenetic tree selection, \emph{Bioinformatics}, 17,
   1246-1247 (software is available from

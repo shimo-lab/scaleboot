@@ -58,6 +58,7 @@ export(countw.assmax,countw.shtest,countw.shtestass)
 export(relltest)
 S3method("[",relltest)
 S3method(print,relltest)
+export(prepare.table.tree,table.tree)
 
 ### interface.R
 S3method(sbfit, pvclust)
@@ -74,4 +75,5 @@ export(read.mt,read.ass,read.cnt)
 ### additional
 importFrom("parallel", "parLapply")
 importFrom("mvtnorm", "pmvnorm")
+importFrom("Matrix", "invPerm")
 
