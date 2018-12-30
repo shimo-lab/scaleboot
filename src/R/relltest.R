@@ -233,17 +233,20 @@ relltest <- function(dat,nb=10000,sa=9^seq(-1,1,length=13),
   ans    
 }
 
-table.relltest <- function(x,...) {
+formatting.relltest <- function(x,...) {
   mycatpval <- function(x) catpval(x$pv,x$pe)$value
   y <- cbind(myformat(c(pi,attr(x,"stat")),digits=2)[-1],
              mycatpval(attr(x,"shtest")))
-  colnames(y) <- c("stat","shtest")
-  y
+  z <- cbind(attr(x,"stat"),attr(x,"shtest")$pv)
+  colnames(z) <- colnames(y) <- c("stat","shtest")
+  head <- "Test Statistic, and Shimodaira-Hasegawa test"
+  list(character=y, head=head, value=z)
 }
 
 print.relltest <- function(x,...) {
-  cat("\nTest Statistic, and Shimodaira-Hasegawa test:\n")
-  catmat(table.relltest(x,...))
+  tab <- formatting.relltest(x,...)
+  cat("\n",tab$head,"\n",sep="")
+  catmat(tab$character)
   NextMethod("print")
 }
 
@@ -279,100 +282,6 @@ rell.shtest <- function(dat,nb,ass=NULL,cluster=NULL,seed=NULL) {
   }
   
   list(stat=tobs,shtest=list(pv=pv,pe=sebp(pv,nb),nb=nb))
-}
-
-
-## x: edge2tree
-## output: tree2edge
-revmap <- function(x,lab="t") {
-  n <- max(unlist(x))
-  y <- vector("list",n)
-  if(!is.null(lab)) names(y) <- paste(lab,seq(along=y),sep="")
-  for(i in seq(along=x)) {
-    for(j in x[[i]]) y[[j]] <- c(y[[j]],i)
-  }
-  y
-}
-
-##########################################################################
-### PHYLOGENETIC ANALYSIS WITH CONSEL
-### 
-### prepare table for phylogenetic inference (sort by stat)
-## trees, edges: outout from relltest
-## edge2tree: ass information from treeass (consel)
-## treename: vector of tree names
-## edgename: vector of edge names
-prepare.table.tree <- function(trees,edges,edge2tree,treename=NULL,edgename=NULL,taxaname=NULL,mt=NULL) {
-  tree2edge <- revmap(edge2tree)
-  
-  stat.tree <- attr(trees,"stat") # likelihood
-  stat.edge <- attr(edges,"stat") # likelihood
-  
-  order.tree <- order(stat.tree)
-  names(order.tree) <- paste("T",seq(along=order.tree),sep="")
-  order.edge <- order(stat.edge)
-  names(order.edge) <- paste("E",seq(along=order.edge),sep="")
-  invorder.tree <- invPerm(order.tree)
-  names(invorder.tree) <- names(trees)
-  invorder.edge <- invPerm(order.edge)
-  names(invorder.edge) <- names(edges)
-  
-  trees <- trees[order.tree]; names(trees) <- names(order.tree)
-  edges <- edges[order.edge]; names(edges) <- names(order.edge)
-  if(!is.null(treename)) {
-    treename <- treename[order.tree]; names(treename) <- names(order.tree)
-  }
-  if(!is.null(edgename)) {
-    edgename <- edgename[order.edge]; names(edgename) <- names(order.edge)
-  }
-  if(!is.null(mt)) {
-    mt <- mt[,order.tree]; colnames(mt) <- names(order.tree)
-  }
-  
-  new.edge2tree <- lapply(edge2tree, function(a) unname(invorder.tree[a]))[order.edge]
-  names(new.edge2tree) <- names(order.edge)
-  new.tree2edge <- lapply(tree2edge, function(a) unname(invorder.edge[a]))[order.tree]
-  names(new.edge2tree) <- names(order.edge)
-  
-  list(trees=trees,edges=edges,edge2tree=new.edge2tree, tree2edge=new.tree2edge, 
-       order.tree=order.tree,order.edge=order.edge,invorder.tree=invorder.tree,invorder.edge=invorder.edge,
-       treename=treename, edgename=edgename, taxaname=taxaname,mt=mt)
-}
-
-### prepare tables for phylogenetic analysis
-### 
-## x: output from reorder.tree
-table.tree <- function(x,k=2) {
-  opt.percent <- sboptions("percent",FALSE); opt.digits.pval <- sboptions("digits.pval",1)
-  ## which pvalue to use
-  bp <- "k.1"
-  auk <- paste("k.",k,sep="")
-  sik <- paste("sk.",k,sep="")
-  
-  ## table for trees
-  a0 <- table.relltest(x$trees)
-  a1 <- table.summary.scalebootv(summary(x$trees,k=c(1,k)))$out
-  a1[a1[,"hypothesis"] == "null",sik] <- ""
-  a <- cbind(a1,a0)
-  out.tree <- a[,c("stat","shtest",bp,auk,sik,"beta0","beta1")]
-  if(!is.null(x$treename)) {
-    out.tree <- cbind(out.tree, x$treename); colnames(out.tree)[ncol(out.tree)] <- "tree"
-  }
-  out.tree <- cbind(out.tree, sapply(x$tree2edge,function(a) paste("E",sort(a),sep="",collapse=",")))
-  colnames(out.tree)[ncol(out.tree)] <- "edge"
-  
-  ## table for edges
-  a1 <- table.summary.scalebootv(summary(x$edges,k=c(1,k)))$out
-  a1[a1[,"hypothesis"] == "null",sik] <- ""
-  out.edge <- a1[,c(bp,auk,sik,"beta0","beta1")]
-  if(!is.null(x$edgename))   {
-    out.edge <- cbind(out.edge, x$edgename); colnames(out.edge)[ncol(out.edge)] <- "edge"
-  }
-  out.edge <- cbind(out.edge, sapply(x$edge2tree,function(a) paste("T",sort(a),sep="",collapse=",")))
-  colnames(out.edge)[ncol(out.edge)] <- "tree"
-  
-  sboptions("percent", opt.percent); sboptions("digits.pval", opt.digits.pval)
-  list(tree=out.tree,edge=out.edge,taxa=x$taxaname)
 }
 
 

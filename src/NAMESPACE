@@ -38,6 +38,7 @@ S3method(plot,summary.scalebootv)
 export(plot.scaleboot)
 export(plot.scalebootv)
 export(sblegend)
+export(sbplotbeta)
 
 ### models.R
 export(sbpsi.poly)
@@ -58,22 +59,25 @@ export(countw.assmax,countw.shtest,countw.shtestass)
 export(relltest)
 S3method("[",relltest)
 S3method(print,relltest)
-export(prepare.table.tree,table.tree)
 
 ### interface.R
 S3method(sbfit, pvclust)
 export(sbpvclust)
+export(sbphylo)
+S3method(print,sbphylo)
+S3method(summary,sbphylo)
+S3method(print,summary.sbphylo)
 export(read.mt,read.ass,read.cnt)
 
 ### R CMD check says:
   importFrom("grDevices", "n2mfrow")
   importFrom("graphics", "abline", "layout", "legend", "lines",
-             "matlines", "matplot", "matpoints", "par", "plot", "points")
+             "matlines", "matplot", "matpoints", "par", "plot", "points",
+             "contour","text")
   importFrom("stats", "coef", "dnorm", "lsfit", "median", "optim",
              "optimize", "pchisq", "pnorm", "qnorm", "quantile",
              "rmultinom")
 ### additional
 importFrom("parallel", "parLapply")
 importFrom("mvtnorm", "pmvnorm")
-importFrom("Matrix", "invPerm")
 

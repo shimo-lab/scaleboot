@@ -5,6 +5,7 @@
 \alias{sblegend}
 \alias{plot.scalebootv}
 \alias{plot.summary.scalebootv}
+\alias{sbplotbeta}
 \title{Plot Diagnostics for Multiscale Bootstrap}
 \description{
   \code{plot} method for class \code{"scaleboot"}.
@@ -34,6 +35,10 @@
       bpk=NULL, length.x=z$length.x, col=z$col,lty=z$lty,lwd=z$lwd,... )
 
 sblegend(x="topright",y=NULL,z,inset=0.1,...)
+
+sbplotbeta(beta, p=0.05, col.contour=c("blue","red","green"),
+                     drawcontours = TRUE, drawlabels = TRUE,
+                     labcex=1,length=100, cex=1, col="black" ) 
 
 }
 \arguments{
@@ -80,13 +85,20 @@ sblegend(x="topright",y=NULL,z,inset=0.1,...)
   \item{y}{numeric passed to \code{legend}.}
   \item{inset}{inset distance from the margins, which is passed to
     \code{legend}.}
+  \item{beta}{matrix of beta values. beta[,1] is beta0, beta[,2] is beta1.}
+  \item{p}{significance level for drawing contour lines.}
+  \item{col.contour}{colors for SI, AU, BP.}
+  \item{drawcontours}{draw contours when TRUE.}
+  \item{drawlabels}{draw labels at contours when TRUE.}
+  \item{labcex}{cex for contours.}
+  \item{length}{grid size for drawing contours.}
 }
 \details{
   The \code{plot} method plots bootstrap probabilities and calls the \code{lines}
   method, which draws fitted curves for models.
 }
 \author{Hidetoshi Shimodaira}
-\seealso{\code{\link{sbfit}}.}
+\seealso{\code{\link{sbfit}}, \code{\link{sbphylo}}.}
 \examples{
 data(mam15)
 ## a single plot

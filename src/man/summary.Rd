@@ -14,11 +14,11 @@
               type=c("Frequentist","Bayesian"),...)
 
 \method{summary}{scalebootv}(object,models=attr(object,"models"),k=3,sk=k,
-              hypothesis="auto",type="Frequentist",...)
+              hypothesis="auto",type="Frequentist", select="average",...)
 
 \method{print}{summary.scaleboot}(x,sort.by=c("aic","none"),verbose=FALSE,...)
 
-\method{print}{summary.scalebootv}(x,select="average",sort.by=NULL,...)
+\method{print}{summary.scalebootv}(x,...)
 }
 \arguments{
   \item{object}{an object used to select a method. }

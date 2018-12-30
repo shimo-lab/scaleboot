@@ -24,11 +24,16 @@
 ## extracting elements
 ##
 
+sbexttab <- function(x,i) {
+  list(character=x$character[i,], head=x$head, value=x$value[i,])
+}
+
 "[.summary.scalebootv" <- function(x, i, ...)
   structure(NextMethod("["),
             pvalues = attr(x,"pvalues"),
             spvalues = attr(x,"spvalues"),
-            lambda = attr(x,"lambda")
+            lambda = attr(x,"lambda"),
+            table = sbexttab(attr(x,"table"),i)
             )
 ##
 ## scaleboot
@@ -356,13 +361,16 @@ print.summary.scaleboot <- function(x,sort.by=c("aic","none"),verbose=FALSE,...)
 ##
 
 summary.scalebootv <- function(object,models=attr(object,"models"),k=3,sk=k,
-                               hypothesis="auto",type="Frequentist",...) {
+                               hypothesis="auto",type="Frequentist",
+                               select="average",...) {
   for(i in seq(along=object)) object[[i]] <- summary(object[[i]],models,k=k,sk=sk,hypothesis=hypothesis,type=type,...)
   class(object) <- c("summary.scalebootv",class(object))
   attr(object,"models") <- models
   attr(object,"pvalues") <- paste("k",k,sep=".")
   attr(object,"spvalues") <- paste("sk",k,sep=".")
   attr(object,"lambda") <- object[[1]]$parex$lambda
+  a <- formatting.summary.scalebootv(object,select=select) 
+  attr(object,"table") <- a
   object
 }
 
@@ -400,16 +408,15 @@ selectpv <- function(x,select) {
   list(pvpe=pvpe,select=select,name=selna,outaic=outaic)
 }
 
-print.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
-  y <- table.summary.scalebootv(x,select=select,sort.by=sort.by,...)
-  
-  ## sort and print
-  cat("\n",y$head,"\n",sep="")
-  catmat(y$out)
-  invisible(y)
+print.summary.scalebootv <- function(x,...) {
+  tab = attr(x,"table")
+  cat("\n",tab$head,"\n",sep="")
+  catmat(tab$character)
+  invisible(x)
 }
 
-table.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
+### internal:  prepare pvalue table (in values and character)
+formatting.summary.scalebootv <- function(x,select="average") {
   ## extract information
   pvalues <- attr(x,"pvalues")
   spvalues <- attr(x,"spvalues")
@@ -421,7 +428,8 @@ table.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
               dimnames=list(names(x),c("raw",pvalues,spvalues,"beta0","beta1","hypothesis")))
 
   ## numerical values for sorting
-  outval <- matrix(0,length(x),1+length(pvalues)+length(spvalues),dimnames=list(names(x),c("raw",pvalues,spvalues)))
+  outval <- matrix(0,length(x),1+length(pvalues)+length(spvalues)+2,
+                   dimnames=list(names(x),c("raw",pvalues,spvalues,"beta0","beta1")))
 
   ## which p-values to be printed?
   selpv <- selectpv(x,select)
@@ -455,18 +463,16 @@ table.summary.scalebootv <- function(x,select="average",sort.by=NULL,...) {
   beta <- lapply(selpv$pvpe,function(a) sbgetbetapar1(a$betapar))
   betav <- sapply(beta,"[[","beta")
   betae <- sapply(beta,"[[","sd")
+  outval[,"beta0"] <- betav[1,]
+  outval[,"beta1"] <- betav[2,]
   out[,"beta0"] <- myformat(c(pi,betav[1,]),c(pi,betae[1,]),digits=2)[-1]
   out[,"beta1"] <- myformat(c(pi,betav[2,]),c(pi,betae[2,]),digits=2)[-1]
 
   ## sort and print
   head=paste("Corrected P-values by ",selpv$name," (",a$name,",",a$lambda,"):",sep="")
-  if(!is.null(sort.by) && sort.by!="none") {
-    j <- order(-outval[,sort.by])
-    out <- out[j,]
-  }
 
-#  invisible(x)
-  list(out=out, head=head, outval=outval)
+  #  invisible(x)
+  list(character=out, head=head, value=outval)
 }
 
 #######
