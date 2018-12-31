@@ -372,7 +372,7 @@ plot.summary.scalebootv <- function(x, select="average",...)
 ##
 sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
                      drawcontours = TRUE, drawlabels = TRUE,
-                     labcex=1,length=100, cex=1, col="black" ) {
+                     labcex=1,length=100, cex=1, col="black",mag.contour=0) {
   
   
   beta0 <- beta[,1]; beta1 <-  beta[,2]; na <- rownames(beta);
@@ -391,6 +391,14 @@ sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
       names(ans) <- c("bp","au","sia","sin")
       ans
     }
+    expandlim <- function(lim) {
+      add <- (lim[2]-lim[1])*mag.contour
+      lim[1] <- lim[1] - add
+      lim[2] <- lim[2] + add
+      lim
+    }
+    xlim <- expandlim(xlim)
+    ylim <- expandlim(ylim)
     vv <- seq(xlim[1],xlim[2],length=length)
     cc <- seq(ylim[1],ylim[2],length=length)
     vc <- as.matrix(expand.grid(vv,cc))

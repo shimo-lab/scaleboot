@@ -38,7 +38,7 @@ sblegend(x="topright",y=NULL,z,inset=0.1,...)
 
 sbplotbeta(beta, p=0.05, col.contour=c("blue","red","green"),
                      drawcontours = TRUE, drawlabels = TRUE,
-                     labcex=1,length=100, cex=1, col="black" ) 
+                     labcex=1,length=100, cex=1, col="black", mag.contour=0 ) 
 
 }
 \arguments{
@@ -92,6 +92,7 @@ sbplotbeta(beta, p=0.05, col.contour=c("blue","red","green"),
   \item{drawlabels}{draw labels at contours when TRUE.}
   \item{labcex}{cex for contours.}
   \item{length}{grid size for drawing contours.}
+  \item{mag.contour}{expand contour plotting region}
 }
 \details{
   The \code{plot} method plots bootstrap probabilities and calls the \code{lines}
