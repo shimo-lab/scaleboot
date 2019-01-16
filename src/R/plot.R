@@ -49,13 +49,12 @@ plot.scaleboot <- function(x,
                        ## points
                        pch=1,cex=1,pt.col=col[1],pt.lwd=lwd[1],
                        ## legend
-                       legend.x=NULL, inset=0.1,
+                       legend.x=NULL, inset=0.1, cex.legend=1,
                        ...
                        ) {
 
   ## option
   op <- sboptions()
-
   ## check log
   if(length(log.xy) && log.xy != "") a <- strsplit(log.xy,"")[[1]] else a <- ""
   xlog <- "x" %in% a
@@ -209,7 +208,7 @@ plot.scaleboot <- function(x,
 
 
   ## legend
-  if(!is.null(legend.x)) sblegend(legend.x,z=c(z1,z2),inset=inset)
+  if(!is.null(legend.x)) sblegend(legend.x,z=c(z1,z2),inset=inset,cex=cex.legend)
 
   invisible(c(z1,z2))
 }
@@ -372,11 +371,13 @@ plot.summary.scalebootv <- function(x, select="average",...)
 ##
 sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
                      drawcontours = TRUE, drawlabels = TRUE,
-                     labcex=1,length=100, cex=1, col="black",mag.contour=0) {
+                     labcex=1,length=100, cex=1, col="black",
+                     xlim=NULL, ylim=NULL, lim.countourexpand=0) {
   
   
   beta0 <- beta[,1]; beta1 <-  beta[,2]; na <- rownames(beta);
-  xlim = range(c(0,beta0),na.rm=TRUE); ylim = range(c(0,beta1),na.rm=TRUE)
+  if(is.null(xlim)) xlim <- range(c(0,beta0),na.rm=TRUE)
+  if(is.null(ylim)) ylim <- range(c(0,beta1),na.rm=TRUE)
   plot(0,0,xlim=xlim,ylim=ylim,type="n",xlab="beta0", ylab="beta1")
   abline(h=0, lty=2)
   abline(v=0, lty=2)  
@@ -392,7 +393,7 @@ sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
       ans
     }
     expandlim <- function(lim) {
-      add <- (lim[2]-lim[1])*mag.contour
+      add <- (lim[2]-lim[1])*lim.countourexpand
       lim[1] <- lim[1] - add
       lim[2] <- lim[2] + add
       lim
