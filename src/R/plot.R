@@ -310,8 +310,7 @@ lines.scaleboot <- function(x,z,
       yy[u1,1] <- z$yfun(yy1,sa[u1]) # fitting
       yy[u2,-1] <- z$yfun(yy2,1) # extrapolation
     }
-#    browser()
-    labels <- paste("k",k,sep=".")
+    labels <- c("fitting", paste("k",k,sep="."))
   }
 
   if(!all(is.na(yy))) matlines(xx,yy,col=col,lty=lty,lwd=lwd)
