@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 
@@ -19,11 +19,15 @@ R は多くの貢献者による共同プロジェクトです。
 
 > ## makedata.R
 > 
+> # for making data
 > nb.rell = 100000
 > nb.pvclust = 10000
+> # for testing program
+> #nb.rell = 1000
+> #nb.pvclust = 100
 > 
 > date()
-[1] "Sun Dec 23 22:28:31 2018"
+[1] "Mon Jan 14 00:48:43 2019"
 > library(parallel)
 > library(pvclust)
 > library(scaleboot)
@@ -32,29 +36,68 @@ R は多くの貢献者による共同プロジェクトです。
 [1] 8
 > 
 > date()
-[1] "Sun Dec 23 22:28:33 2018"
+[1] "Mon Jan 14 00:48:44 2019"
 > 
+> ### relltest for mam15
 > mam15.mt <- read.mt("mam15-files/mam15.mt")
 Read 15 items of length 3414 
 > mam15.ass <- read.ass("mam15-files/mam15.ass")
 Read 10 items for 15 elements
 > sa <- 9^seq(-1,1,length=13)
 > mam15.relltest <- relltest(mam15.mt,nb=nb.rell,sa=sa,ass=mam15.ass,cluster=cl)
-> save(mam15.mt,mam15.ass,mam15.relltest,file="data/mam15.RData")
+> 
+> ### aux info for mam15
+> a <- read.table("mam15-files/mam15.tpl",skip=2)
+> mam15.tpl <- as.character(a[,1]) # topology
+> #names(mam15.tpl) <- as.character(a[,2]) # name (actually, the same name as below)
+> names(mam15.tpl) <- attr(mam15.ass,"trees") # using the names assigned by read.ass
+> mam15.cld <- as.character(read.table("mam15-files/mam15.cld",skip=4)[,2])
+> names(mam15.cld) <- attr(mam15.ass,"edges")
+> mam15.tax <- as.character(read.table("mam15-files/mam15.tax",skip=2)[,2])
+> mam15.aux <- list(tpl=mam15.tpl, cld=mam15.cld, tax=mam15.tax)
+> 
+> ### mam26 ( = mam15 + mam11 ) without relltest
+> a <- read.table("mam15-files/mam26.tpl",skip=2)
+> mam26.tpl <- as.character(a[,1]) # topology
+> names(mam26.tpl) <- as.character(a[,2]) # name
+> mam26.mt <- read.mt("mam15-files/mam26.mt")
+Read 26 items of length 3414 
+> colnames(mam26.mt) <- names(mam26.tpl)
+> mam26.ass <- read.ass("mam15-files/mam26.ass")
+Read 10 items for 26 elements
+> names(mam26.ass)[1:26] <- names(mam26.tpl)
+> attr(mam26.ass,"trees")[1:26 ] <- names(mam26.tpl)
+> mam26.aux <- list(tpl=mam26.tpl, cld=mam15.cld, tax=mam15.tax)
 > 
 > date()
-[1] "Sun Dec 23 22:35:28 2018"
+[1] "Mon Jan 14 00:56:05 2019"
 > 
-> mam105.mt <- read.mt("mam105-files/mam105.mt")
+> ### relltest for mam105
+> mam105.mt <- read.mt("mam15-files/mam105.mt")
 Read 105 items of length 3414 
-> mam105.ass <- read.ass("mam105-files/mam105.ass")
+> mam105.ass <- read.ass("mam15-files/mam105.ass")
 Read 25 items for 105 elements
 > sa <- 9^seq(-1,1,length=13)
 > mam105.relltest <- relltest(mam105.mt,nb=nb.rell,sa=sa,ass=mam105.ass,cluster=cl)
-> save(mam105.mt,mam105.ass,mam105.relltest,file="data/mam105.RData")
+> 
+> 
+> ### aux info for mam105
+> a <- read.table("mam15-files/mam105.tpl",skip=2)
+> mam105.tpl <- as.character(a[,1]) # topology
+> #names(mam15.tpl) <- as.character(a[,2]) # name (actually, the same name as below)
+> names(mam105.tpl) <- attr(mam105.ass,"trees") # using the names assigned by read.ass
+> mam105.cld <- as.character(read.table("mam15-files/mam105.cld",skip=4)[,2])
+> names(mam105.cld) <- attr(mam105.ass,"edges")
+> mam105.tax <- as.character(read.table("mam15-files/mam105.tax",skip=2)[,2])
+> mam105.aux <- list(tpl=mam105.tpl, cld=mam105.cld, tax=mam105.tax)
+> 
+> ### save the result for mam15 and mam11
+> save(mam15.mt,mam15.ass,mam15.relltest,mam15.aux,
++      mam26.mt,mam26.ass,mam26.aux,
++      mam105.mt,mam105.ass,mam105.relltest,mam105.aux,file="data/mam15.RData")
 > 
 > date()
-[1] "Sun Dec 23 23:09:55 2018"
+[1] "Mon Jan 14 01:32:23 2019"
 > 
 > data(lung)
 > sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
@@ -65,8 +108,8 @@ Multiscale bootstrap... Done.
 > 
 > 
 > date()
-[1] "Sun Dec 23 23:43:48 2018"
+[1] "Mon Jan 14 01:59:36 2019"
 > quit(save="no")
 > proc.time()
    ユーザ   システム       経過  
-     1.472      0.255   4516.794 
+     1.371      0.204   4253.862 
