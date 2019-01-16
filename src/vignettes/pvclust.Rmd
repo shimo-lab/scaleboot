@@ -1,0 +1,225 @@
+---
+title: "Computing selective inference p-values of clusters using pvclust and scaleboot"
+author: "Hidetoshi Shimodaira"
+date: "2019/01/14"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+\fontsize{6}{8}
+\selectfont
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.width=7, fig.height=7, out.width = '40%', fig.align = "center") 
+```
+
+# Hierarchical Clustering of Lung Data
+
+## Introduction
+Our method for computing selective inference $p$-values via multiscale bootstrap is
+explained in Shimodaira and Terada (2019). The theory for the selective inference behind the method is given in Terada and Shimodaira (2017). The *pvclust* package is originally described in Suzuki and Shimodaira (2006) for non-selective inference, and the multiscale bootstrap method of *scaleboot* is originally described in Shimodaira (2008).
+
+Hidetoshi Shimodaira and Yoshikazu Terada.
+Selective Inference for Testing Trees and Edges in Phylogenetics.
+2019.
+
+Yoshikazu Terada and Hidetoshi Shimodaira.
+Selective inference for the problem of regions via multiscale bootstrap.
+arXiv:1711.00949, 2017.
+
+Hidetoshi Shimodaira.
+Testing regions with nonsmooth boundaries via multiscale bootstrap.
+Journal of Statistical Planning and Inference 138 (5), 1227-1241, 2008.
+
+Ryota Suzuki and  Hidetoshi Shimodaira.
+Pvclust: an R package for assessing the uncertainty in hierarchical clustering.
+Bioinformatics 22 (12), 1540-1542, 2006.
+
+## pvclust and scaleboot packages
+
+We use the following two packages here. Both packages implement the multiscale bootstrap method.
+Older versions of *pvclust* and *scaleboot* compute only BP and AU, but newer versions (pvclust>=2.1-0, scaleboot>=1.0-0) compute SI as well.
+
+```{r}
+library(pvclust)  # computing p-values for clusters in hierarchical clustering 
+library(scaleboot)  # computing p-values for general setttings
+```
+
+## Using multi-core CPU
+
+If your pc has cpu with many cores, then we can speed up bootstrap computation.
+```{r, eval=FALSE}
+### dont run
+library(parallel)
+length(cl <- makeCluster(detectCores()))
+```
+
+# Using pvclust package
+
+## lung data
+
+We use the sample data of microarray expression profiles. It is $n\times m$ matrix for $n=916$ genes and $m=73$ tumors. We compute clusters of tumors.
+
+```{r}
+data(lung)  # in pvclust
+dim(lung)
+```
+
+## run pvclust
+
+We may run pvclust as follows. The default scale is specifed as *r=seq(.5,1.4,by=.1)* in pvlcust. 
+It is equivalent to $\sigma^{-2} = 0.5, 0.6, \ldots, 1.4$ for multiscale bootstrap.
+
+```{r, eval=FALSE}
+### dont run
+lung.pv <- pvclust(lung, nboot=10000, parallel=cl)
+```
+
+## using preveously computed result
+
+We have run pvclust in *makedata.R* in *scaleboot*. Instead of the default scale of *pvclust*, we have used a wider range of the scale: thirteen values of $\sigma^2$ are specified in log-scale from 1/9 to 9.
+
+```{r, eval=FALSE}
+nb.pvclust = 10000
+sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
+lung73.pvclust <- pvclust(lung,r=1/sa,nboot=nb.pvclust,parallel=cl) # took 30 mins with my laptop pc
+```
+
+You can get the result as follows.
+```{r}
+data(lung73)  # in scaleboot
+lung73.pvclust # pvclust object
+```
+
+## dendrogram with p-values
+
+Showing the dendrogram is easy.  Each edge has three types of $p$-values: SI, AU, BP. Higher values indicate larger confidence in the clusters.
+**Warning: Do not use the following $p$-values as explained below.**
+
+```{r, out.width = '50%'}
+plot(lung73.pvclust, # Warning:  dont use the p-values of this plot!!!
+     cex=0.5, cex.pv=0.5, offset=c(0.6,0.1,0.1,0.1))  
+# plot(lung.pv,  # use this plot!!!
+#     cex=0.5, cex.pv=0.5, offset=c(0.6,0.1,0.1,0.1)) 
+```
+In the above dendrogram, we have used the wider range of scales. But it is not appropriate for pvclust actually.  The wider range of scales is good for *scaleboot*, but the narrow range of scales is appropriate for *pvclust*.
+
+Next, we recalcualte the $p$-values using *scaleboot*.
+
+# Using scaleboot package
+
+## Recalculating the p-values
+
+We have run *pvclust* for calculating p-values by multiscale bootstrap. However, we use only the multiscale bootstrap probabilities from the output of *pvclust* below.
+First, we fit scaling law models to the the multiscale bootstrap probabilities.
+
+```{r, eval=FALSE}
+### dont run
+lung73.sb <- sbfit(lung73.pvclust,cluster=cl) # took a second with my laptop pc
+```
+
+Again, we have run it in *makedata.R*, and here we use the result in *data(lung73)*.
+
+```{r}
+lung73.sb  # class is "scalebootv" 
+```
+
+Then $p$-values are calculated by *summary* method from the *scalebootv* object.
+For cluster id=62, for example, we can compute p-values as follows. We specify $k$ (default is 3) for computing $p$-values.
+
+```{r}
+summary(lung73.sb[62], k=2) # compute p-values (k=2)
+```
+
+We can use any functions of *scaleboot* package like above.
+However, we use a specially designed function for working jointly with *pvclsut* as follows.
+
+```{r}
+lung73.k2 <- sbpvclust(lung73.pvclust,lung73.sb, k=2) # compute p-values (k=2)
+lung73.k2
+```
+
+This is *pvclust* object, and you can draw the dendrogram from it.
+We draw rectangles for clusters with SI > 0.95. SI is the selective inference p-value which is appropriate for clusters, because SI adjusts the selection bias, whereas AU does not.
+
+```{r, out.width = '60%'}
+plot(lung73.k2, # p-values should be close to plot(lung.pv)
+     cex=0.5, cex.pv=0.5, offset=c(0.6,0.1,0.1,0.1))
+pvrect(lung73.k2, pv="si") # draw rectangle for clusters si>0.95
+```
+
+In the older versions of *pvclust* and *scaleboot* can only compute AU instead of SI. AU is not appropriate for clusters found by the dedrogoram you looked at. AU is appropriate only for clusters which you were interested in before looking at the dendrogram.
+The red rectangles are clusters with AU>0.95, which were computed in older version of the program.
+Fortunately, the results did not change so much in this data.
+
+```{r, out.width = '60%'}
+plot(lung73.k2, # p-values should be close to plot(lung.pv)
+     cex=0.5, cex.pv=0.5, offset=c(0.6,0.1,0.1,0.1))
+pvrect(lung73.k2, pv="au") # draw rectangle for clusters au>0.95
+```
+
+## Diagnostics of beta0 and beta1
+
+The three types of $p$-values (SI, AU, BP) are computed from two geometric quantities $\beta_0$ and $\beta_1$.
+Look at the estimated values of them.
+
+```{r, out.width = '80%'}
+lung73.ss <- summary(lung73.sb, k=2) # compute p-values
+lung73.aa <- attr(lung73.ss, "table") # extract table of p-values, etc
+lung73.beta <- lung73.aa$value[,c("beta0","beta1")]
+sbplotbeta(lung73.beta,col=rgb(0,0,0,alpha=0.7),cex=0.8,xlim=c(-8,3))
+```
+
+Although we expect $\beta_0\le 0$ and $\beta_1\ge0$, some clusters do not satisfy these inequalities.  They might have some problem.
+```{r}
+ lung73.aa$character[which(lung73.beta[,2]<0),c("beta0","beta1")] # show beta1 < 0
+```
+The values in parantheses are standard errors.  Those with $\beta_1<0$ have large standard errors, so they happened because nboot is not enough. In any case, these clusters have very small $\beta_0$ values with very high confidence levels. So we do not have to worry about it.
+
+```{r}
+ lung73.aa$character[which(lung73.beta[,1]>0),c("beta0","beta1")] # show beta0 > 0
+```
+
+The standard errors for $\beta_0>0$ are very small. They have $\beta_0$ close to origin with low confidence levels. So again, we may not need to worry about it.
+
+## Diagnostics of model fitting
+
+Look at details of each cluster.
+Model fitting for cluster id=62, say, is shown as follows.
+```{r}
+plot(lung73.sb[[62]],legend="topleft") # fitting candiate models
+plot(summary(lung73.sb[[62]], k=2:3),legend="topleft") # extrapolation to sigma^2 = -1
+summary(lung73.sb[[62]], k=2:3) # p-values for k=2 and k=3
+```
+
+For cluster id=62 above, the quadratic model in terms of $\sigma^2$, namely, poly.3 ($\beta_0 + \beta_1 \sigma^2 + \beta_2 \sigma^4$) is the best model. The linear model poly.2 ($\beta_0 + \beta_1 \sigma^2$) is also not bad. For computing AU and SI, we extrapolate the curve to $\sigma^2=-1$.  When $k=1$, we use the tangent line at $\sigma^2=1$ for extrapolation.  When $k=2$, we use a quadratic curve for extrapolation. For cluster id=62, the difference between $k=2$ and $k=3$ is small. In the table, AU is indicated as k.2 and k.3, SI is indicated as sk.2 and sk.3.
+
+Model fitting for cluster id=67 is shown as follows.
+```{r}
+plot(lung73.sb[[67]],legend="topleft") # fitting candiate models
+plot(summary(lung73.sb[[67]], k=2:3),legend="topleft") # extrapolation to sigma^2 = -1
+summary(lung73.sb[[67]], k=2:3) # p-values for k=2 and k=3
+```
+
+For cluster id=67, the extrapolation to $\sigma^2=0$ with $k=3$ is smaller than that with $k=2$, suggesting that $\beta_0$ value with $k=3$ would be smaller. This is also shown as estimated $\beta_0$ for poly.3 model below. ($\beta_0$ of sing.3 model is even closer to zero, which corresponds to $k\to\infty$.)
+
+```{r}
+lung73.sb[[67]]
+```
+We expect that $\beta_0<0$ from the theory, the above result suggests $k=3$ would be better than $k=2$, although it is still positive. In general, $p$-values with $k=3$ would have better accuracy than those with $k=2$. Larger $k$ should be better, but there is a trade-off beween the accuracy and numerical stability though, so we do not try $k=4$ or higher.
+
+## Using k=3 for p-values
+
+Now try $k=3$ for computing $p$-values.
+```{r}
+lung73.k3 <- sbpvclust(lung73.pvclust,lung73.sb, k=3) # compute p-values (k=3)
+lung73.k3
+```
+
+Redraw the dendrogram.
+```{r, out.width = '60%'}
+plot(lung73.k3, # p-values should be close to plot(lung.pv)
+     cex=0.5, cex.pv=0.5, offset=c(0.6,0.1,0.1,0.1))
+pvrect(lung73.k2, pv="si") # draw rectangle for clusters si>0.95
+```
+
