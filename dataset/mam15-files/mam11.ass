@@ -1,0 +1,111 @@
+
+# EDGE->TREE
+10
+
+# item: 0
+#!VEC:
+1
+         1 
+
+# item: 1
+#!VEC:
+1
+         2 
+
+# item: 2
+#!VEC:
+1
+         3 
+
+# item: 3
+#!VEC:
+1
+         4 
+
+# item: 4
+#!VEC:
+1
+         5 
+
+# item: 5
+#!VEC:
+1
+         6 
+
+# item: 6
+#!VEC:
+1
+         7 
+
+# item: 7
+#!VEC:
+1
+         8 
+
+# item: 8
+#!VEC:
+1
+         9 
+
+# item: 9
+#!VEC:
+1
+        10 
+
+# TREE->EDGE
+11
+
+# item: 0
+#!VEC:
+0
+
+
+# item: 1
+#!VEC:
+1
+         0 
+
+# item: 2
+#!VEC:
+1
+         1 
+
+# item: 3
+#!VEC:
+1
+         2 
+
+# item: 4
+#!VEC:
+1
+         3 
+
+# item: 5
+#!VEC:
+1
+         4 
+
+# item: 6
+#!VEC:
+1
+         5 
+
+# item: 7
+#!VEC:
+1
+         6 
+
+# item: 8
+#!VEC:
+1
+         7 
+
+# item: 9
+#!VEC:
+1
+         8 
+
+# item: 10
+#!VEC:
+1
+         9 
