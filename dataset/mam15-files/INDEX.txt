@@ -1,9 +1,34 @@
+## mam15 files
 mam15.aa: amino acid sequences (N=3414) for the six mammals.
 mam15.ass: association vectors for edges and trees.
 mam15.lnf: site-wise log-likelihood values (output from PAML).
-mam15.log: detailed information for the associations.
+mam15.log: log file of treeass.
 mam15.mt: site-wise log-likelihood values (output from seqmt).
 mam15.tpl: 15 tree topologies.
+mam15.tax: taxa names.
+mam15.cld: clade patterns.
+--------------------------------------------------------------
+## mam11 files  (1star + 10edges, given (P,B) clade)
+mam11.ass: association vectors for edges and trees.
+mam11.lnf: site-wise log-likelihood values (output from PAML).
+mam11.log: log file of treeass.
+mam11.mt: site-wise log-likelihood values (output from seqmt).
+mam11.tpl: 11 partially resolved trees
+--------------------------------------------------------------
+## mam26 files = mam15 + mam11
+mam26.ass: association vectors for edges and trees.
+mam26.lnf: cat mam15.lnf mam11.lnf, then hand edit
+mam26.log: log file of treeass.
+mam26.mt: site-wise log-likelihood values (output from seqmt).
+mam26.tpl: cat mam15.tpl mam11.tpl, then hand edit
+--------------------------------------------------------------
+## mam105 files
+mam105.ass: association vectors for edges and trees.
+mam105.lnf: site-wise log-likelihood values (output from PAML).
+mam105.log: log file of treeass.
+mam105.mt: site-wise log-likelihood values (output from seqmt).
+mam105.tpl: 105 tree topologies of six taxa
+--------------------------------------------------------------
 
 All the files are in simple text format.
 
@@ -12,3 +37,27 @@ This dataset was originally used in:
 H. Shimodaira and M. Hasegawa (1999). Multiple comparisons of
 log-likelihoods with applications to phylogenetic inference, Molecular
 Biology and Evolution, 16, 1114-1116.
+
+H. Shimodaira (2001). Multiple comparisons of log-likelihoods and
+ combining nonnested models with applications to phylogenetic tree selection,
+Communications in Statistics - Theory and Methods, 30, 1751-1772.
+
+==============================================================
+### memo
+
+cat mam15.tpl mam11.tpl > mam26.tpl  # edit by hand
+
+treeass --outgroup 6 mam15 > mam15.log
+treeass --outgroup 6 mam11 > mam11.log
+treeass --outgroup 6 mam26 > mam26.log
+treeass --outgroup 6 mam105 > mam105.log
+
+cp -a 11Z.lfh mam11.lnf
+cp -a 15Z2.lfh mam15.lnf
+cat mam15.lnf mam11.lnf > mam26.lnf  # edit by hand (id 16...26 are renumbered)
+
+seqmt --paml mam15
+seqmt --paml mam11
+seqmt --paml mam26
+seqmt --paml mam105
+

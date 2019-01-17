@@ -1,0 +1,87 @@
+# $Id: treeass.c,v 1.7 2002/07/26 03:20:14 shimo Exp $
+# reading mam11.tpl
+# 11 trees read
+# 11 trees, 6 leaves
+# edges total: 18
+# reverse edges: 0
+# 10 base-edges, 7 common-edges, 1 root-edge
+
+# trees: 11 out of 11
+11
+(Homsa,(Phovi,Bosta),Orycu,Musmu,Didvi); 1 <- 1 (0.0909)
+((Homsa,(Phovi,Bosta),Orycu),Musmu,Didvi); 2 <- 2 (0.0909)
+((Homsa,Orycu,Musmu),(Phovi,Bosta),Didvi); 3 <- 3 (0.0909)
+(((Phovi,Bosta),Orycu,Musmu),Homsa,Didvi); 4 <- 4 (0.0909)
+((Homsa,(Phovi,Bosta),Musmu),Orycu,Didvi); 5 <- 5 (0.0909)
+(Homsa,(Phovi,Bosta),(Orycu,Musmu,Didvi)); 6 <- 6 (0.0909)
+(Orycu,Musmu,(Homsa,(Phovi,Bosta),Didvi)); 7 <- 7 (0.0909)
+((Phovi,Bosta),Musmu,(Homsa,Orycu,Didvi)); 8 <- 8 (0.0909)
+(Homsa,Orycu,((Phovi,Bosta),Musmu,Didvi)); 9 <- 9 (0.0909)
+((Phovi,Bosta),Orycu,(Homsa,Musmu,Didvi)); 10 <- 10 (0.0909)
+(Homsa,Musmu,((Phovi,Bosta),Orycu,Didvi)); 11 <- 11 (0.0909)
+
+# leaves: 6
+6
+  1 Homsa
+  2 Phovi
+  3 Bosta
+  4 Orycu
+  5 Musmu
+  6 Didvi
+
+# base edges: 10
+10 6
+          
+    123456
+  1 ++++--  ; (0.0909)
+  2 +--++-  ; (0.0909)
+  3 -++++-  ; (0.0909)
+  4 +++-+-  ; (0.0909)
+  5 +++---  ; (0.0909)
+  6 ---++-  ; (0.0909)
+  7 -++-+-  ; (0.0909)
+  8 +--+--  ; (0.0909)
+  9 -+++--  ; (0.0909)
+ 10 +---+-  ; (0.0909)
+
+# common edges: 7
+7 6
+          
+    123456
+ 11 +-----  ; (1.0000)
+ 12 -++---  ; (1.0000)
+ 13 -+----  ; (1.0000)
+ 14 --+---  ; (1.0000)
+ 15 ---+--  ; (1.0000)
+ 16 ----+-  ; (1.0000)
+ 17 +++++-  ; (1.0000)
+
+# tree->edge
+11
+  1   0  
+  2   1  1 
+  3   1  2 
+  4   1  3 
+  5   1  4 
+  6   1  5 
+  7   1  6 
+  8   1  7 
+  9   1  8 
+ 10   1  9 
+ 11   1  10 
+
+# edge->tree
+10
+  1   1  2
+  2   1  3
+  3   1  4
+  4   1  5
+  5   1  6
+  6   1  7
+  7   1  8
+  8   1  9
+  9   1  10
+ 10   1  11
+
+# writing mam11.ass
+# exit normally

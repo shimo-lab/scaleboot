@@ -1,6 +1,6 @@
 105
 
-(Homsa,((Phovi,Bosta),Orycu),(Didvi,Musmu)); 0.0
+(Homsa,((Phovi,Bosta),Orycu),(Musmu,Didvi)); 0.0
 ((Homsa,Orycu),(Phovi,Bosta),(Didvi,Musmu)); 47.5
 ((Homsa,Musmu),((Phovi,Bosta),Orycu),Didvi); 48.5
 (Homsa,(Phovi,Bosta),((Didvi,Musmu),Orycu)); 49.7

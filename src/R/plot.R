@@ -49,13 +49,12 @@ plot.scaleboot <- function(x,
                        ## points
                        pch=1,cex=1,pt.col=col[1],pt.lwd=lwd[1],
                        ## legend
-                       legend.x=NULL, inset=0.1,
+                       legend.x=NULL, inset=0.1, cex.legend=1,
                        ...
                        ) {
 
   ## option
   op <- sboptions()
-
   ## check log
   if(length(log.xy) && log.xy != "") a <- strsplit(log.xy,"")[[1]] else a <- ""
   xlog <- "x" %in% a
@@ -209,7 +208,7 @@ plot.scaleboot <- function(x,
 
 
   ## legend
-  if(!is.null(legend.x)) sblegend(legend.x,z=c(z1,z2),inset=inset)
+  if(!is.null(legend.x)) sblegend(legend.x,z=c(z1,z2),inset=inset,cex=cex.legend)
 
   invisible(c(z1,z2))
 }
@@ -311,8 +310,7 @@ lines.scaleboot <- function(x,z,
       yy[u1,1] <- z$yfun(yy1,sa[u1]) # fitting
       yy[u2,-1] <- z$yfun(yy2,1) # extrapolation
     }
-#    browser()
-    labels <- paste("k",k,sep=".")
+    labels <- c("fitting", paste("k",k,sep="."))
   }
 
   if(!all(is.na(yy))) matlines(xx,yy,col=col,lty=lty,lwd=lwd)
@@ -372,11 +370,13 @@ plot.summary.scalebootv <- function(x, select="average",...)
 ##
 sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
                      drawcontours = TRUE, drawlabels = TRUE,
-                     labcex=1,length=100, cex=1, col="black" ) {
+                     labcex=1,length=100, cex=1, col="black",
+                     xlim=NULL, ylim=NULL, lim.countourexpand=0) {
   
   
   beta0 <- beta[,1]; beta1 <-  beta[,2]; na <- rownames(beta);
-  xlim = range(c(0,beta0),na.rm=TRUE); ylim = range(c(0,beta1),na.rm=TRUE)
+  if(is.null(xlim)) xlim <- range(c(0,beta0),na.rm=TRUE)
+  if(is.null(ylim)) ylim <- range(c(0,beta1),na.rm=TRUE)
   plot(0,0,xlim=xlim,ylim=ylim,type="n",xlab="beta0", ylab="beta1")
   abline(h=0, lty=2)
   abline(v=0, lty=2)  
@@ -391,6 +391,14 @@ sbplotbeta <- function(beta, p=0.05, col.contour=c("blue","red","green"),
       names(ans) <- c("bp","au","sia","sin")
       ans
     }
+    expandlim <- function(lim) {
+      add <- (lim[2]-lim[1])*lim.countourexpand
+      lim[1] <- lim[1] - add
+      lim[2] <- lim[2] + add
+      lim
+    }
+    xlim <- expandlim(xlim)
+    ylim <- expandlim(ylim)
     vv <- seq(xlim[1],xlim[2],length=length)
     cc <- seq(ylim[1],ylim[2],length=length)
     vc <- as.matrix(expand.grid(vv,cc))

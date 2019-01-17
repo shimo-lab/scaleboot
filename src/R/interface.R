@@ -70,16 +70,28 @@ sbpvclust <- function(x,mbs,k=3,select="average",...) {
 ### prepare table for phylogenetic inference (sort by stat)
 ## trees, edges: outout from relltest
 ## edge2tree: ass information from treeass (consel)
-## treename: vector of tree names
-## edgename: vector of edge names
+## treename: vector of tree names (often, topologies)
+## edgename: vector of edge names (often, clade patterns)
 ##
 ## just sorting the trees and edges by their stat values (log-likelihood values)
 ##
-sbphylo <- function(trees,edges,edge2tree,
+## Primary input is (trees, edges, edge2tree), but they can be computed from
+## (relltest, ass). So either of the two inputs should be specified.
+##
+sbphylo <- function(relltest,ass,
+                    trees,edges,edge2tree,
                     treename=NULL,edgename=NULL,taxaname=NULL,mt=NULL,sort=TRUE) {
+  ## we need: trees, edges, edge2tree
+    if(!missing(ass)) {
+    trees.names <- attr(ass,"trees")
+    edges.names <- attr(ass,"edges")
+  }
+  if(missing(edge2tree) & !missing(ass)) edge2tree <- ass[edges.names]
+  if(missing(trees)) trees <- relltest[trees.names]
+  if(missing(edges)) edges <- relltest[edges.names]
+  
   ## compute reverse mapping  (actually stored in ass file, but ignored when reading)
   tree2edge <- revmap(edge2tree)
-  
   
   if(!sort) {
     ## not sorting
@@ -159,6 +171,7 @@ summary.sbphylo <- function(object,k=2,...) {
   opt.percent <- sboptions("percent",FALSE); opt.digits.pval <- sboptions("digits.pval",1)
   ## which pvalue to use
   bp <- "k.1"  ### using au(k=1) instead of raw bp
+  k <- k[k!=1] # remove k=1 from k
   auk <- paste("k.",k,sep="") ### using au(k=k) for AU
   sik <- paste("sk.",k,sep="") ### using si(k=k) for SI
   
