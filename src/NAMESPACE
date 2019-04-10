@@ -63,6 +63,7 @@ S3method(print,relltest)
 ### interface.R
 S3method(sbfit, pvclust)
 export(sbpvclust)
+S3method(plot, sbclust)
 export(sbphylo)
 S3method(print,sbphylo)
 S3method(summary,sbphylo)

@@ -29,8 +29,8 @@ sbfit.pvclust <- function(x,...)
   sbfit(as.matrix(x$count)/x$nboot,x$nboot,1/x$r,...)
 ##
 ## y <- sbfits(x.old)
-## x.new <- mbpvclust(x.old,y) # use "k.2"
-## x.new <- mbpvclust(x.old,y,k=3) # use "k.3"
+## x.new <- sbpvclust(x.old,y) # use "k.2"
+## x.new <- sbpvclust(x.old,y,k=3) # use "k.3"
 sbpvclust <- function(x,mbs,k=3,select="average",...) {
   k=k[1] # uses only one k value
   a <- summary(mbs,k=c(k,1),hypothesis="alternative",...) # compute k.k and k.1
@@ -58,9 +58,24 @@ sbpvclust <- function(x,mbs,k=3,select="average",...) {
   x$edges[,"pchi"] <- 0
   ## method overwrite
   x$method <- c("scaleboot", paste("k=",k,sep=""))
+  ## new class: sbclust
+  class(x) <- c("sbclust", class(x))
 
   x
 }
+
+## 
+## plot(x.new)  # by r.suzuki
+##
+plot.sbclust <- function(x, ...) {
+  cl <- match.call()
+  if(!("main" %in% names(cl))) {
+    cl$main <- paste("Cluster SI/AU/BP values (%) by", paste(x$method, collapse=" "))
+  }
+  cl[[1L]] <- quote(pvclust:::plot.pvclust)
+  eval(cl, parent.frame())
+}
+
 
 ##########################################################################
 ### PHYLOGENETIC ANALYSIS WITH CONSEL
