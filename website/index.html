@@ -50,9 +50,11 @@
 		<p>scaleboot has a front end for phylogenetic inference, and it can replace <a href="../consel/index.html">CONSEL software</a> for testing phylogenetic trees. Currently, scaleboot does not have a method for file conversion of several phylogenetic software, and so we must use CONSEL for this purpose before applying scaleboot to calculate an improved version of AU p-values for trees and edges.</p>
 		<p><b>The package vignette &quot;Multiscale Bootstrap Using Scaleboot Package&quot; (<a href="usesb.pdf">usesb.pdf</a>) explains the methodology. It includes a simple example for illustration. It also includes real applications in hierarchical clustering and phylogenetic inference.  Further description is given in Shimodaira (2008). For the use of scaleboot, Shimodaira (2008) may be referenced.</b></p>
 		<p><b>New in 2019. A new method &quot;Selective Infernce&quot; (SI) has been implemented in scaleboot (>=1.0-0) and pvclust (>=2.1-0); currently they are only in the development versions available at github sites. SI is useful for computing p-values for
-		edges (or clusters). The method is explained in Shimodaira and Terada (2019),
+		edges (or clusters). The method is explained in 
+		<a href="https://arxiv.org/abs/1902.04964">Shimodaira and Terada (2019)</a>,
 		and it may be cited for using SI value.
-		The theory of SI is described in Terada and Shimodaira (2017).
+		The theory of SI is described in
+		<a href="https://arxiv.org/abs/1711.00949">Terada and Shimodaira (2017)</a>.
 		Three new vignettes are also available:
 		&quot;Phylogenetic Tree Selection&quot;	(<a href="phylo.pdf">phylo.pdf</a>),
 		&quot;Model Map in Phylogenetics&quot;	(<a href="modelmap.pdf">modelmap.pdf</a>),
@@ -72,19 +74,23 @@ pvclust and scaleboot&quot;	(<a href="pvclust.pdf">pvclust.pdf</a>).
 		</ul>
 		The development version of scaleboot as well as pvclust is available at github.
 		<ul>
-			<li> <a href="https://github.com/shimo-lab/scaleboot">scaleboot at github</a>
+			<li> <a href="https://github.com/shimo-lab/scaleboot">scaleboot at github</a>. The development version is at master branch.
 			</li>
-			<li> <a href="https://github.com/shimo-lab/pvclust">pvclust at github</a>
+			<li> <a href="https://github.com/shimo-lab/pvclust">pvclust at github</a>. The development version is at develop branch.
 			</li>
 		</ul>
 		<h3><i>Install</i></h3>
-		<p>scaleboot is easily installed from CRAN online. RStudio users can install the package by choosing &quot;scaleboot&quot; from the pull-down menu. Otherwise, run R on your computer and type</p>
-		<code>install.packages("scaleboot")</code>
-		<p>The development version of scaleboot is installed from github. You need the devtools for installing from github.</p>
+		<p>scaleboot as well as pvclust is easily installed from CRAN online. RStudio users can install the package by choosing &quot;scaleboot&quot; from the pull-down menu. Otherwise, run R on your computer and type</p>
+		<code>
+		> install.packages("scaleboot")<br>
+		> install.packages("pvclust")
+		</code>
+		<p>The development version of scaleboot as well as pvclust is installed from github. You need the devtools for installing from github.</p>
 		<code>
 		> install.packages("devtools")  # binary version is ok<br>
 		> library(devtools)<br>
-		> install_github("shimo-lab/scaleboot", subdir = "src")  # ref=master
+		> install_github("shimo-lab/scaleboot", subdir = "src")  # ref=master<br>
+		> install_github("shimo-lab/pvclust", ref = "develop", subdir = "src")
 		</code>
 	<h3><i>Dataset files</i></h3>
 		<p>Supplementary dataset files for phylogenetic inference are available at <tt> dataset/mam15-files</tt> directory of
@@ -93,7 +99,7 @@ pvclust and scaleboot&quot;	(<a href="pvclust.pdf">pvclust.pdf</a>).
 		<h3><i>References</i></h3>
 		<ul>
 			<li>Shimodaira, H. (2002).  An approximately unbiased test of phylogenetic tree selection. Systematic Biology, 51, 492-508. 
-			<li>Shimodaira, H. (2004).  Approximately unbiased tests of regions using multistep-multiscale bootstrap resampling. <a href="http://projecteuclid.org/Dienst/UI/1.0/Journal?authority=euclid.aos&issue=1107794868">Annals of Statistics</a>, 32, 2616-2641. [<a href="../../pub/Shimodaira%20AS%202004%202616.pdf">PDF</a>] <a href="http://stat.sys.i.kyoto-u.ac.jp/titech/multiboot.html">[SUPPLEMENT</a>]
+			<li>Shimodaira, H. (2004).  Approximately unbiased tests of regions using multistep-multiscale bootstrap resampling. <a href="http://projecteuclid.org/Dienst/UI/1.0/Journal?authority=euclid.aos&issue=1107794868">Annals of Statistics</a>, 32, 2616-2641. [<a href="http://stat.sys.i.kyoto-u.ac.jp/titech/pub/Shimodaira%20AS%202004%202616.pdf">PDF</a>] <a href="http://stat.sys.i.kyoto-u.ac.jp/titech/multiboot.html">[SUPPLEMENT</a>]
 			<li>Shimodaira, H. (2006).  Approximately Unbiased Tests for Singular Surfaces via Multiscale Bootstrap Resampling. Research Reports B-430. Department of Mathematical and Computing Sciences, Tokyo Institute of Technology, Japan. [<a href="http://stat.sys.i.kyoto-u.ac.jp/titech/pub/B-430.pdf">PDF</a>]
 			<li>Shimodaira, H. (2006). Technical Details of Multiscale Bootstrap for Singular Surfaces. Research Reports B-431. Department of Mathematical and Computing Sciences, Tokyo Institute of Technology, Japan. [<a href="http://stat.sys.i.kyoto-u.ac.jp/titech/pub/B-431.pdf">PDF</a>]
 		
@@ -104,6 +110,7 @@ pvclust and scaleboot&quot;	(<a href="pvclust.pdf">pvclust.pdf</a>).
 			<a href="https://arxiv.org/abs/1711.00949">arXiv:1711.00949</a>
 			<li> Shimodaira, H. and Terada, R. (2019).
 			Selective Inference for Testing Trees and Edges in Phylogenetics.
+			<a href="https://arxiv.org/abs/1902.04964">arXiv:1902.04964</a>
 			</li>
 		</ul>
 		<p></p>
