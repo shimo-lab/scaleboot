@@ -70,12 +70,15 @@ sbpvclust <- function(x,mbs,k=3,select="average",...) {
 plot.sbclust <- function(x, ...) {
   cl <- match.call()
   if(!("main" %in% names(cl))) {
-    cl$main <- paste("Cluster SI/AU/BP values (%) by", paste(x$method, collapse=" "))
+    cl$main <- paste("Cluster p-values (%) by", paste(x$method, collapse=" "))
   }
-  cl[[1L]] <- quote(pvclust:::plot.pvclust)
+  
+  class(x) <- "pvclust"
+  cl[[1L]] <- quote(plot)
+  cl[[2L]] <- bquote(.(x))
+  
   eval(cl, parent.frame())
 }
-
 
 ##########################################################################
 ### PHYLOGENETIC ANALYSIS WITH CONSEL
