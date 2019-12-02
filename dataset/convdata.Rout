@@ -1,0 +1,33 @@
+
+R Under development (unstable) (2019-11-07 r77386) -- "Unsuffered Consequences"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R は、自由なソフトウェアであり、「完全に無保証」です。 
+一定の条件に従えば、自由にこれを再配布することができます。 
+配布条件の詳細に関しては、'license()' あるいは 'licence()' と入力してください。 
+
+R は多くの貢献者による共同プロジェクトです。 
+詳しくは 'contributors()' と入力してください。 
+また、R や R のパッケージを出版物で引用する際の形式については 
+'citation()' と入力してください。 
+
+'demo()' と入力すればデモをみることができます。 
+'help()' とすればオンラインヘルプが出ます。 
+'help.start()' で HTML ブラウザによるヘルプがみられます。 
+'q()' と入力すれば R を終了します。 
+
+> ## just load and save data
+> 
+> load("data/mam15.RData")
+> save(mam15.mt,mam15.ass,mam15.relltest,mam15.aux,
++      mam26.mt,mam26.ass,mam26.aux,
++      mam105.mt,mam105.ass,mam105.relltest,mam105.aux,file="data/mam15-new.RData")
+> 
+> 
+> load("data/lung73.RData")
+> save(lung73.pvclust,lung73.sb, lung.pvclust,lung.sb,file="data/lung73-new.RData")
+> 
+> proc.time()
+   ユーザ   システム       経過  
+     0.233      0.038      0.275 
