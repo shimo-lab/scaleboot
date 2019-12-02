@@ -12,14 +12,6 @@
 }
 \usage{
 data(lung73)
-
-lung73.pvclust
-
-lung73.sb
-
-lung.pvclust
-
-lung.sb
 }
 \format{
   \code{lung73.pvclust} and \code{lung.pvclust} are objects of class \code{"pvclust"}
