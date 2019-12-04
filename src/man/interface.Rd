@@ -48,7 +48,8 @@ sbpvclust(x,mbs,k=3,select="average",...)
    Functions for interface to pvclust are: \code{sbfit} method for an
    object of class \code{"pvclust"} to convert it to \code{"scalebootv"} class,
    and \code{sbpvclust} for writing back the result to a
-   \code{"pvclust"} object.
+   \code{"pvclust"} object with additional class \code{"sbclust"}.
+   \code{plot} method for class \code{"sbclust"} overwrites that for \code{"pvclust"}.
  }
 \value{
   \code{read.mt} returns a matrix of dimension sequence-length by tree-number.
@@ -62,8 +63,7 @@ sbpvclust(x,mbs,k=3,select="average",...)
 
   \code{sbfit.pvclust} returns an object of class
   \code{"scalebootv"}. \code{sbpvclust} returns an object of class
-  \code{"pvclust"}.
-
+  \code{"sbclust"} added to the class \code{"pvclust"}.
 }
 \references{
 Shimodaira, H. and Hasegawa, M. (2001). CONSEL: for

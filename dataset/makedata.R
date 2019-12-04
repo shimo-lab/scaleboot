@@ -70,10 +70,15 @@ save(mam15.mt,mam15.ass,mam15.relltest,mam15.aux,
 date()
 
 data(lung)
-sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
+### wider range of scales than pvclust default
+sa <- 9^seq(-1,1,length=13) 
 lung73.pvclust <- pvclust(lung,r=1/sa,nboot=nb.pvclust,parallel=cl) 
 lung73.sb <- sbfit(lung73.pvclust,cluster=cl) # model fitting
-save(lung73.pvclust,lung73.sb,file="data/lung73.RData")
+### default pvclust scales
+lung.pvclust <- pvclust(lung, nboot=nb.pvclust, parallel=cl)
+lung.sb <- sbfit(lung.pvclust,cluster=cl) # model fitting
+### save results
+save(lung73.pvclust,lung73.sb, lung.pvclust,lung.sb,file="data/lung73.RData")
 
 
 date()

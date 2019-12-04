@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 
 R は、自由なソフトウェアであり、「完全に無保証」です。 
@@ -27,16 +27,16 @@ R は多くの貢献者による共同プロジェクトです。
 > #nb.pvclust = 100
 > 
 > date()
-[1] "Mon Jan 14 00:48:43 2019"
+[1] "Mon Nov 18 23:03:50 2019"
 > library(parallel)
 > library(pvclust)
 > library(scaleboot)
 > 
 > length(cl <- makeCluster(detectCores()))
-[1] 8
+[1] 16
 > 
 > date()
-[1] "Mon Jan 14 00:48:44 2019"
+[1] "Mon Nov 18 23:03:52 2019"
 > 
 > ### relltest for mam15
 > mam15.mt <- read.mt("mam15-files/mam15.mt")
@@ -70,7 +70,7 @@ Read 10 items for 26 elements
 > mam26.aux <- list(tpl=mam26.tpl, cld=mam15.cld, tax=mam15.tax)
 > 
 > date()
-[1] "Mon Jan 14 00:56:05 2019"
+[1] "Mon Nov 18 23:07:14 2019"
 > 
 > ### relltest for mam105
 > mam105.mt <- read.mt("mam15-files/mam105.mt")
@@ -97,19 +97,25 @@ Read 25 items for 105 elements
 +      mam105.mt,mam105.ass,mam105.relltest,mam105.aux,file="data/mam15.RData")
 > 
 > date()
-[1] "Mon Jan 14 01:32:23 2019"
+[1] "Mon Nov 18 23:33:43 2019"
 > 
 > data(lung)
-> sa <- 9^seq(-1,1,length=13) # wider range of scales than pvclust default
+> ### wider range of scales than pvclust default
+> sa <- 9^seq(-1,1,length=13) 
 > lung73.pvclust <- pvclust(lung,r=1/sa,nboot=nb.pvclust,parallel=cl) 
 Multiscale bootstrap... Done.
 > lung73.sb <- sbfit(lung73.pvclust,cluster=cl) # model fitting
-> save(lung73.pvclust,lung73.sb,file="data/lung73.RData")
+> ### default pvclust scales
+> lung.pvclust <- pvclust(lung, nboot=nb.pvclust, parallel=cl)
+Multiscale bootstrap... Done.
+> lung.sb <- sbfit(lung.pvclust,cluster=cl) # model fitting
+> ### save results
+> save(lung73.pvclust,lung73.sb, lung.pvclust,lung.sb,file="data/lung73.RData")
 > 
 > 
 > date()
-[1] "Mon Jan 14 01:59:36 2019"
+[1] "Mon Nov 18 23:48:02 2019"
 > quit(save="no")
 > proc.time()
    ユーザ   システム       経過  
-     1.371      0.204   4253.862 
+     1.589      0.206   2651.654 

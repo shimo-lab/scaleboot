@@ -175,11 +175,14 @@ f # print the result of fitting
 plot(f,legend="topleft") # observed bp's and fitted curves
 ## approximately unbiased p-values
 summary(f) # calculate and print p-values
+
+\dontrun{
 ## refitting with models up to "poly.4" and "sing.4"
 f <- sbfit(f,models=1:4)
 f # print the result of fitting
 plot(f,legend="topleft") # observed bp's and fitted curves
 summary(f) # calculate and print p-values
+}
 
 \dontrun{
 ## Testing multiple hypotheses (only two here)
